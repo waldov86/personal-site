@@ -1,0 +1,145 @@
+---
+// Rendered server-side; all interaction is handled by the inline script below.
+// No framework JS needed — plain localStorage + gtag consent update.
+---
+
+<div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-live="polite" hidden>
+  <p class="cookie-banner__text">
+    This site uses Google Analytics to understand how people find and read it.
+    No ads, no cross-site tracking.
+    <a href="/privacy">Privacy policy</a>
+  </p>
+  <div class="cookie-banner__actions">
+    <button id="cookie-decline" class="cookie-banner__btn cookie-banner__btn--secondary">Decline</button>
+    <button id="cookie-accept" class="cookie-banner__btn cookie-banner__btn--primary">Accept</button>
+  </div>
+</div>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    width: min(calc(100vw - 2rem), 640px);
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.12);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .cookie-banner[hidden] { display: none; }
+
+  .cookie-banner__text {
+    flex: 1;
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .cookie-banner__text a {
+    color: #f96a2f;
+    text-underline-offset: 2px;
+  }
+
+  .cookie-banner__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .cookie-banner__btn {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .cookie-banner__btn--secondary {
+    background: transparent;
+    border-color: #e5e5e5;
+    color: #555;
+  }
+  .cookie-banner__btn--secondary:hover { border-color: #aaa; }
+
+  .cookie-banner__btn--primary {
+    background: #f96a2f;
+    color: #fff;
+  }
+  .cookie-banner__btn--primary:hover { background: #e05a22; }
+</style>
+
+<script>
+  const CONSENT_KEY = 'cookie_consent';
+
+  function applyConsent(state: 'granted' | 'denied') {
+    const MAX_WAIT = 3000;
+    const INTERVAL = 50;
+    let elapsed = 0;
+
+    function tryApply(): boolean {
+      if (typeof (window as any).gtag === 'function') {
+        (window as any).gtag('consent', 'update', {
+          analytics_storage: state,
+          ad_storage: 'denied',
+        });
+        return true;
+      }
+      return false;
+    }
+
+    if (tryApply()) return;
+
+    const id = setInterval(() => {
+      elapsed += INTERVAL;
+      if (tryApply()) {
+        clearInterval(id);
+      } else if (elapsed >= MAX_WAIT) {
+        clearInterval(id);
+        // Retry on tab refocus (handles ad-blocker delay)
+        document.addEventListener('visibilitychange', function retry() {
+          if (tryApply()) document.removeEventListener('visibilitychange', retry);
+        });
+      }
+    }, INTERVAL);
+  }
+
+  function getStored(): 'granted' | 'denied' | null {
+    try {
+      const v = localStorage.getItem(CONSENT_KEY);
+      if (v === 'granted' || v === 'denied') return v;
+    } catch {}
+    return null;
+  }
+
+  const banner = document.getElementById('cookie-banner')!;
+  const stored = getStored();
+
+  if (stored === null) {
+    banner.hidden = false;
+  } else {
+    applyConsent(stored);
+  }
+
+  document.getElementById('cookie-accept')!.addEventListener('click', () => {
+    localStorage.setItem(CONSENT_KEY, 'granted');
+    applyConsent('granted');
+    banner.hidden = true;
+  });
+
+  document.getElementById('cookie-decline')!.addEventListener('click', () => {
+    localStorage.setItem(CONSENT_KEY, 'denied');
+    applyConsent('denied');
+    banner.hidden = true;
+  });
+</script>

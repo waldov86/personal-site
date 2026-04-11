@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Privacy Policy — Waldo Vanderhaeghen" description="How this site handles your data">
+  <article class="legal">
+    <h1>Privacy Policy</h1>
+
+    <h2>Who is responsible</h2>
+    <p>
+      Waldo Vanderhaeghen, Berlin, Germany.<br />
+      Contact: <a href="mailto:waldov86@gmail.com">waldov86@gmail.com</a>
+    </p>
+
+    <h2>What data is collected</h2>
+    <p>
+      This site uses Google Analytics 4 to understand how visitors find and read content.
+      Analytics is only activated if you explicitly accept cookies. If you decline, no data is sent to Google.
+    </p>
+    <p>
+      When analytics is active, Google Analytics collects: pages visited, time spent, referrer URL,
+      browser type, and approximate country. No names, email addresses, or personally identifiable
+      information are collected.
+    </p>
+
+    <h2>Google Analytics & Consent Mode v2</h2>
+    <p>
+      This site uses Google Consent Mode v2. Analytics storage is set to <strong>denied</strong> by default.
+      It is only changed to <strong>granted</strong> when you click "Accept" in the cookie banner.
+      Your choice is stored in your browser's localStorage and respected on return visits.
+    </p>
+    <p>
+      Google Analytics data is processed by Google LLC. For more information, see
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.
+    </p>
+
+    <h2>Your rights (GDPR)</h2>
+    <p>
+      You have the right to access, correct, delete, or restrict processing of your personal data.
+      You can withdraw consent at any time by clearing your browser's localStorage or by contacting me
+      at <a href="mailto:waldov86@gmail.com">waldov86@gmail.com</a>.
+    </p>
+
+    <h2>No other tracking</h2>
+    <p>
+      This site uses no advertising trackers, no social media pixels, no third-party cookies beyond
+      Google Analytics (and only when consented), and no server-side logging of visitor IP addresses.
+    </p>
+
+    <h2>Hosting</h2>
+    <p>
+      This site is hosted on <a href="https://vercel.com" target="_blank" rel="noopener">Vercel</a>.
+      Vercel may process access logs as part of its infrastructure. See
+      <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Vercel's Privacy Policy</a>.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .legal {
+    max-width: var(--prose-width);
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+</style>

@@ -1,17 +1,32 @@
 ---
-
+import Base from '../layouts/Base.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base
+  title="Waldo Vanderhaeghen"
+  description="PM, builder, and occasional thinker. Writing about AI tooling, side projects, and product work."
+>
+  <section class="hero">
+    <h1>Waldo Vanderhaeghen</h1>
+    <p>PM · builder · curious about what AI actually changes.</p>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    max-width: var(--prose-width);
+    margin: 4rem auto;
+    padding: 0 1.5rem;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--color-muted);
+    font-size: 1.1rem;
+  }
+</style>

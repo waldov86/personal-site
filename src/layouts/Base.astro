@@ -1,0 +1,122 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} ogImage={ogImage} />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <a href="/" class="site-nav__home">Waldo Vanderhaeghen</a>
+        <div class="site-nav__links">
+          <a href="/blog">Writing</a>
+          <a href="/projects">Projects</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a href="/impressum">Impressum</a>
+        <span aria-hidden="true">·</span>
+        <a href="/privacy">Privacy</a>
+      </p>
+    </footer>
+
+    <CookieBanner />
+  </body>
+</html>
+
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --color-bg: #fafaf9;
+    --color-text: #1a1a1a;
+    --color-muted: #555;
+    --color-accent: #f96a2f;
+    --color-accent-hover: #e05a22;
+    --color-border: #e5e5e5;
+    --font-serif: 'Lora', Georgia, serif;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --prose-width: 680px;
+  }
+
+  html { font-size: 18px; }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    line-height: 1.7;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main { flex: 1; }
+
+  a { color: var(--color-accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--color-accent-hover); }
+
+  .site-header {
+    border-bottom: 1px solid var(--color-border);
+    padding: 1rem 1.5rem;
+  }
+
+  .site-nav {
+    max-width: var(--prose-width);
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .site-nav__home {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .site-nav__home:hover { color: var(--color-accent); }
+
+  .site-nav__links {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+  }
+  .site-nav__links a { color: var(--color-muted); text-decoration: none; }
+  .site-nav__links a:hover { color: var(--color-accent); }
+
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+  .site-footer a { color: var(--color-muted); }
+  .site-footer a:hover { color: var(--color-accent); }
+  .site-footer p { display: flex; gap: 0.75rem; justify-content: center; margin: 0; }
+</style>
