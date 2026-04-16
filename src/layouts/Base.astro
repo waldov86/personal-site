@@ -37,11 +37,12 @@ const { title, description, ogImage } = Astro.props;
         <span aria-hidden="true">·</span>
         <a href="/privacy">Privacy</a>
       </p>
-      <p class="site-footer__status" aria-hidden="true">
-        <span class="status-dot"></span>
-        <span class="status-word"></span>
-      </p>
     </footer>
+
+    <div class="site-statusbar" aria-hidden="true">
+      <span class="status-dot"></span>
+      <span class="status-word"></span>
+    </div>
 
     <CookieBanner />
 
@@ -131,6 +132,14 @@ const { title, description, ogImage } = Astro.props;
 
         // stagger start so it doesn't fire immediately on load
         setTimeout(tick, 1200);
+      }
+
+      // ── Sticky header: transparent → solid on scroll ─────────────────
+      const siteHeader = document.querySelector('.site-header') as HTMLElement | null;
+      if (siteHeader) {
+        const onScroll = () => siteHeader.classList.toggle('scrolled', window.scrollY > 10);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll(); // run once on load
       }
 
       // ── Spotlight: track mouse per card ──────────────────────────────
@@ -248,9 +257,22 @@ const { title, description, ogImage } = Astro.props;
 
   /* Site header */
   .site-header {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid transparent;
     padding: 1rem 1.5rem;
+    background: transparent;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition:
+      background 200ms var(--ease-out),
+      border-color 200ms var(--ease-out);
+  }
+
+  .site-header.scrolled {
     background: var(--color-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom-color: var(--color-border);
   }
 
   .site-nav {
@@ -262,16 +284,24 @@ const { title, description, ogImage } = Astro.props;
     gap: 1rem;
   }
 
+  /* Nav links — white over cover photo, normal color when scrolled */
   .site-nav__home {
     font-family: var(--font-serif);
     font-weight: 600;
     font-size: 1rem;
-    color: var(--color-text);
+    color: rgba(255, 255, 255, 0.92);
     text-decoration: none;
     letter-spacing: -0.01em;
     transition: color var(--duration-fast) var(--ease-out);
+    text-shadow: 0 1px 4px rgba(44, 40, 37, 0.4);
   }
-  .site-nav__home:hover { color: var(--color-accent); }
+  .site-nav__home:hover { color: rgba(255, 255, 255, 1); }
+
+  .site-header.scrolled .site-nav__home {
+    color: var(--color-text);
+    text-shadow: none;
+  }
+  .site-header.scrolled .site-nav__home:hover { color: var(--color-accent); }
 
   .site-nav__links {
     display: flex;
@@ -283,10 +313,11 @@ const { title, description, ogImage } = Astro.props;
     font-family: var(--font-sans);
     font-size: var(--text-sm);
     font-weight: 500;
-    color: var(--color-muted);
+    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
     position: relative;
     transition: color var(--duration-fast) var(--ease-out);
+    text-shadow: 0 1px 4px rgba(44, 40, 37, 0.4);
   }
 
   .site-nav__links a::after {
@@ -296,37 +327,50 @@ const { title, description, ogImage } = Astro.props;
     left: 0;
     width: 0;
     height: 1px;
-    background: var(--color-accent);
+    background: rgba(255, 255, 255, 0.8);
     transition: width var(--duration-base) var(--ease-out);
   }
 
   .site-nav__links a:hover::after { width: 100%; }
-  .site-nav__links a:hover { color: var(--color-text); }
+  .site-nav__links a:hover { color: rgba(255, 255, 255, 1); }
 
-  /* Site footer */
+  .site-header.scrolled .site-nav__links a {
+    color: var(--color-muted);
+    text-shadow: none;
+  }
+  .site-header.scrolled .site-nav__links a::after { background: var(--color-accent); }
+  .site-header.scrolled .site-nav__links a:hover { color: var(--color-text); }
+
+  /* Site footer — normal flow, only visible when scrolled to bottom */
   .site-footer {
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
     border-top: 1px solid var(--color-border);
     padding: 1.5rem;
     text-align: center;
     font-size: 0.8rem;
     color: var(--color-muted);
-    background: var(--color-bg);
   }
   .site-footer a { color: var(--color-muted); }
   .site-footer a:hover { color: var(--color-accent); }
   .site-footer p { display: flex; gap: 0.75rem; justify-content: center; margin: 0; }
 
-  .site-footer__status {
-    margin-top: 0.75rem;
+  /* Status bar — always visible, sticky at bottom */
+  .site-statusbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
     font-family: var(--font-mono);
     font-size: 0.72rem;
     color: var(--color-faint);
     letter-spacing: 0.04em;
-    gap: 0.4rem;
-    align-items: center;
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
   }
 
   .status-dot {
