@@ -1,0 +1,232 @@
+---
+import Base from './Base.astro';
+import MermaidDiagram from '../components/MermaidDiagram.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags?: string[];
+  hasMermaid?: boolean;
+  ogImage?: string;
+}
+
+const { title, description, pubDate, updatedDate, tags = [], hasMermaid = false, ogImage } = Astro.props;
+const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base title={`${title} — Waldo Vanderhaeghen`} description={description} ogImage={ogImage}>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">{title}</h1>
+      <div class="post__meta">
+        <time datetime={pubDate.toISOString()}>{dateFormatter.format(pubDate)}</time>
+        {updatedDate && (
+          <span>Updated <time datetime={updatedDate.toISOString()}>{dateFormatter.format(updatedDate)}</time></span>
+        )}
+      </div>
+      {tags.length > 0 && (
+        <div class="post__tags">
+          {tags.map(tag => <span class="tag">#{tag}</span>)}
+        </div>
+      )}
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    <footer class="post__footer">
+      <a href="/blog" class="back-link">← All writing</a>
+    </footer>
+  </article>
+
+  {hasMermaid && <MermaidDiagram />}
+</Base>
+
+<style>
+  .post {
+    max-width: var(--prose-width);
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .post__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    line-height: 1.25;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .post__meta {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .post__tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .tag {
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-xl);
+  }
+
+  .post__footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .back-link {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--color-accent); }
+
+  /* Prose styles */
+  .prose :global(h2) {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    margin-top: 2.75rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+
+  .prose :global(h3) {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .prose :global(p) {
+    margin-bottom: 0.85rem;
+  }
+
+  /* Drop cap on first paragraph */
+  .prose :global(p:first-of-type::first-letter) {
+    font-family: var(--font-serif);
+    font-size: 3.5em;
+    font-weight: 600;
+    color: var(--color-accent);
+    float: left;
+    line-height: 0.82;
+    margin: 0.06em 0.1em 0 0;
+  }
+
+  /* Ornamental section break */
+  .prose :global(hr) {
+    border: none;
+    text-align: center;
+    overflow: visible;
+    margin: 1.5rem 0;
+  }
+
+  .prose :global(hr::after) {
+    content: '· · ·';
+    display: inline-block;
+    color: var(--color-faint);
+    font-size: var(--text-sm);
+    letter-spacing: 0.4em;
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.84em;
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-sm);
+  }
+
+  .prose :global(pre) {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-size: 0.84rem;
+    line-height: 1.65;
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--color-accent);
+    margin: 1.5rem 0;
+    padding: 0.5rem 1.25rem;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 0.4rem;
+  }
+
+  .prose :global(a) {
+    color: var(--color-accent);
+  }
+
+  .prose :global(strong) {
+    font-weight: 600;
+  }
+
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+  }
+
+  .prose :global(th) {
+    text-align: left;
+    border-bottom: 2px solid var(--color-border);
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+  }
+
+  .prose :global(td) {
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Mermaid diagrams */
+  .prose :global(.mermaid-diagram) {
+    margin: 2rem 0;
+    overflow-x: auto;
+    text-align: center;
+  }
+
+  .prose :global(.mermaid-diagram svg) {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

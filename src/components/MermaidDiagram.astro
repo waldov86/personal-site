@@ -1,0 +1,46 @@
+---
+// Client-side Mermaid initializer.
+// Finds all <pre><code class="language-mermaid"> blocks rendered from Markdown
+// and replaces them with rendered SVG diagrams.
+---
+
+<script>
+  async function initMermaid() {
+    const { default: mermaid } = await import('mermaid');
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'neutral',
+      themeVariables: {
+        fontFamily: 'Inter, system-ui, sans-serif',
+        fontSize: '14px',
+        primaryColor: '#f4ede0',
+        primaryBorderColor: '#e8ddd4',
+        lineColor: '#6b5f57',
+        textColor: '#2c2825',
+      },
+    });
+
+    // Astro uses Shiki to highlight code blocks, so mermaid blocks end up as
+    // <pre data-language="mermaid"> with styled <span> children.
+    // We extract the plain text content and replace the pre with a mermaid div.
+    const preBlocks = document.querySelectorAll<HTMLElement>('pre[data-language="mermaid"]');
+
+    for (const pre of preBlocks) {
+      const code = pre.querySelector('code');
+      const source = (code ?? pre).textContent ?? '';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'mermaid-diagram';
+      wrapper.textContent = source;
+      pre.replaceWith(wrapper);
+    }
+
+    await mermaid.run({ querySelector: '.mermaid-diagram' });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMermaid);
+  } else {
+    initMermaid();
+  }
+</script>

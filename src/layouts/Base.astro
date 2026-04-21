@@ -17,17 +17,18 @@ const { title, description, ogImage } = Astro.props;
     <BaseHead title={title} description={description} ogImage={ogImage} />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <header class="site-header">
       <nav class="site-nav">
         <a href="/" class="site-nav__home">Waldo Vanderhaeghen</a>
         <div class="site-nav__links">
-          <a href="/blog">Writing</a>
-          <a href="/about">About</a>
+          <a href="/blog" aria-current={Astro.url.pathname.startsWith('/blog') ? 'page' : undefined}>Writing</a>
+          <a href="/about" aria-current={Astro.url.pathname.startsWith('/about') ? 'page' : undefined}>About</a>
         </div>
       </nav>
     </header>
 
-    <main>
+    <main id="main-content">
       <slot />
     </main>
 
@@ -157,6 +158,23 @@ const { title, description, ogImage } = Astro.props;
 <style is:global>
   *, *::before, *::after { box-sizing: border-box; }
 
+  /* Skip to main content — visible on keyboard focus only */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 200;
+    padding: 0.5rem 1rem;
+    background: var(--color-text);
+    color: var(--color-bg);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    transition: top 150ms var(--ease-out);
+  }
+  .skip-link:focus { top: 0; }
+
   :root {
     /* Palette — warm European editorial */
     --color-bg:           #f9f5ee;
@@ -268,6 +286,22 @@ const { title, description, ogImage } = Astro.props;
       border-color 200ms var(--ease-out);
   }
 
+  /* Scrim behind nav text — guarantees contrast over photo */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.32) 0%, transparent 100%);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 200ms var(--ease-out);
+    z-index: -1;
+  }
+
+  .site-header.scrolled::before {
+    opacity: 0;
+  }
+
   .site-header.scrolled {
     background: var(--color-bg);
     backdrop-filter: blur(8px);
@@ -334,12 +368,30 @@ const { title, description, ogImage } = Astro.props;
   .site-nav__links a:hover::after { width: 100%; }
   .site-nav__links a:hover { color: rgba(255, 255, 255, 1); }
 
+  /* Active state — transparent header (over photo) */
+  .site-nav__links a[aria-current="page"] {
+    color: rgba(255, 255, 255, 1);
+  }
+  .site-nav__links a[aria-current="page"]::after {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
   .site-header.scrolled .site-nav__links a {
     color: var(--color-muted);
     text-shadow: none;
   }
   .site-header.scrolled .site-nav__links a::after { background: var(--color-accent); }
   .site-header.scrolled .site-nav__links a:hover { color: var(--color-text); }
+
+  /* Active state — scrolled header (solid background) */
+  .site-header.scrolled .site-nav__links a[aria-current="page"] {
+    color: var(--color-text);
+  }
+  .site-header.scrolled .site-nav__links a[aria-current="page"]::after {
+    width: 100%;
+    background: var(--color-accent);
+  }
 
   /* Site footer — normal flow, only visible when scrolled to bottom */
   .site-footer {
@@ -388,10 +440,27 @@ const { title, description, ogImage } = Astro.props;
     50%       { opacity: 0.4; transform: scale(0.75); }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot { animation: none; }
+  }
+
   .status-word {
     display: inline-block;
     min-width: 12ch;
     text-align: left;
+  }
+
+  /* Scroll-reveal for homepage sections */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out);
+  }
+  .scroll-animate.animate-in { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-animate { opacity: 1; transform: none; transition: none; }
   }
 
   /* Spotlight card effect */

@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="About — Waldo Vanderhaeghen"
+  description="PM, builder, and occasional thinker. Based in Berlin."
+>
+  <div class="page">
+    <div class="about-grid">
+      <div class="about-photo">
+        <img src="/images/waldo-profile.jpg" alt="Waldo Vanderhaeghen" width="280" height="280" />
+      </div>
+
+      <div class="about-bio">
+        <h1>About</h1>
+
+        <p>
+          I'm Waldo — a product manager and builder based in Berlin. I spend most of my
+          time thinking about AI tooling, building automations that solve real personal
+          problems, and writing about what I learn along the way.
+        </p>
+
+        <p>
+          My day job is PM work: specs, tickets, coordination, roadmaps. My side projects
+          are where I close the gap between "I wonder if that's possible" and an answer.
+          Most of what's on this site started as a thing I needed and couldn't find.
+        </p>
+
+        <p>
+          I'm particularly interested in the gap between AI demos and AI that actually
+          works in production — reliable categorization, deterministic pipelines, audit
+          trails, things that keep running when you're not watching.
+        </p>
+
+        <h2>Contact</h2>
+
+        <p>
+          <a href="https://www.linkedin.com/in/waldovander/" target="_blank" rel="noopener">LinkedIn</a>
+          &nbsp;·&nbsp;
+          <a href="/rss.xml">RSS</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    max-width: var(--prose-width);
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 640px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .about-photo { text-align: center; }
+  }
+
+  .about-photo img {
+    width: 100%;
+    max-width: 220px;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  li {
+    margin-bottom: 0.4rem;
+    line-height: 1.65;
+  }
+
+  a {
+    color: var(--color-accent);
+  }
+</style>
