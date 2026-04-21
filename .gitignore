@@ -24,3 +24,10 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel
+
+# planning & tooling artifacts
+CVR Optimizer public/
+cv-widget/
+planning/
+style.md
+blog post dates.md
