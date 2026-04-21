@@ -1,32 +1,653 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+const recentPosts = posts
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+
+const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <Base
-  title="Waldo Vanderhaeghen"
-  description="PM, builder, and occasional thinker. Writing about AI tooling, side projects, and product work."
+  title="Sharing what moves me forward — Waldo Vanderhaeghen"
+  description="A log of what I'm doing, thinking about, and building. Senior PM. Writing about AI tooling, automation, and side projects."
 >
-  <section class="hero">
-    <h1>Waldo Vanderhaeghen</h1>
-    <p>PM · builder · curious about what AI actually changes.</p>
-  </section>
+  <!-- Full-bleed cover — slides up behind the sticky nav via negative margin -->
+  <div class="cover">
+    <img src="/images/hero-balloons.jpg" alt="Hot air balloons at sunrise" width="1400" height="420" />
+    <div class="cover__title">
+      <h1 class="animate-in">Sharing what moves me forward</h1>
+    </div>
+  </div>
+
+  <div class="home">
+
+    <!-- Page header — sits directly below the cover -->
+    <div class="page-header">
+      <p class="page-header__intro animate-in" data-delay="1">
+        Hi, I'm Waldo and this is my small personal site — a log of what I am doing,
+        thinking about, and a new way to connect with people.
+      </p>
+      <p class="page-header__role animate-in" data-delay="2">Currently: Senior Product Manager at <a href="https://www.kleinanzeigen.de/" target="_blank" rel="noopener noreferrer">Kleinanzeigen</a>.</p>
+    </div>
+
+    <!-- Recent writing -->
+    <section class="section">
+      <div class="section__header">
+        <div>
+          <span class="section__eyebrow">Recent writing</span>
+          <h2>What I've been thinking</h2>
+        </div>
+        <a href="/blog" class="section__more">All posts →</a>
+      </div>
+      <ul class="post-list">
+        {recentPosts.map((post, i) => (
+          <li class="post-item spotlight animate-in" data-delay={String(i + 1)}>
+            <a href={`/blog/${post.id.replace(/\.md$/, '')}/`} class="post-item__title">{post.data.title}</a>
+            <p class="post-item__desc">{post.data.description}</p>
+            <time class="post-item__date" datetime={post.data.pubDate.toISOString()}>
+              {dateFormatter.format(post.data.pubDate)}
+            </time>
+          </li>
+        ))}
+      </ul>
+      <div class="section__footer">
+        <a href="/blog" class="section__all">All writing →</a>
+      </div>
+    </section>
+
+    <!-- What I am looking forward to -->
+    <section class="section section--prose section--sage scroll-animate">
+      <span class="section__eyebrow">On the horizon</span>
+      <h2>What I am looking forward to</h2>
+      <ol>
+        <li>Learning how AI-native looks like in a team setting</li>
+        <li>
+          Sharing, exchanging, learning from others:
+          <div class="bookmark-list">
+            <a href="https://www.aicampberlin.com/" class="bookmark" target="_blank" rel="noopener">
+              <div class="bookmark__text">
+                <span class="bookmark__title">AI Camp Berlin — Europe's Premier AI Barcamp</span>
+                <span class="bookmark__desc">Join diverse professionals exploring how AI is reshaping every industry. From the organizers of ProductCamp Berlin.</span>
+                <span class="bookmark__url">aicampberlin.com</span>
+              </div>
+            </a>
+            <a href="https://luma.com/qzm6a0jg" class="bookmark" target="_blank" rel="noopener">
+              <div class="bookmark__text">
+                <span class="bookmark__title">Gastgeber Stammtisch — vol. 4 · Luma</span>
+                <span class="bookmark__desc">Smoobu Office Berlin — Nach drei großartigen Gastgeberabenden geht unser Stammtisch in die vierte Runde.</span>
+                <span class="bookmark__url">luma.com/qzm6a0jg</span>
+              </div>
+            </a>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Where I come from -->
+    <section class="section section--prose scroll-animate">
+      <span class="section__eyebrow">Background</span>
+      <h2>Where I come from</h2>
+      <p>
+        I'm a product manager by trade. Over the last few years I've mostly worked on marketplace
+        and SaaS products, sitting close to growth, monetization, and messy operational reality.
+      </p>
+      <p>Across marketplace and B2B SaaS work, I kept running into the same problems:</p>
+      <div class="callout-card">
+        <span class="callout-card__label">High volume, manual glue</span>
+        <p>Systems that technically worked, but only because people were compensating for gaps, edge cases, and missing automation.</p>
+      </div>
+      <div class="callout-card">
+        <span class="callout-card__label">Decision making that didn't scale</span>
+        <p>Data existed, but turning it into action still relied on meetings, interpretation, or tribal knowledge instead of clear feedback loops.</p>
+      </div>
+      <div class="callout-card">
+        <span class="callout-card__label">Solutions built on symptoms, not causes</span>
+        <p>Features and processes layered on without fully addressing the underlying problem, leading to fragile systems that aged badly.</p>
+      </div>
+      <p>
+        What I enjoy most is stepping back, understanding the <em>actual</em> problem underneath, and then
+        building systems from the ground up that remove entire classes of work instead of
+        shifting them around.
+      </p>
+    </section>
+
+    <!-- What I'm interested in right now -->
+    <section class="section section--prose scroll-animate">
+      <span class="section__eyebrow">Interests</span>
+      <h2>What I'm interested in right now</h2>
+      <ul class="interest-list">
+        <li class="interest-item">
+          <span class="interest-item__label">AI as infrastructure</span>
+          <span class="interest-item__body">what happens when AI makes internal tools cheaper than meetings</span>
+        </li>
+        <li class="interest-item">
+          <span class="interest-item__label">Small over generic</span>
+          <span class="interest-item__body">how small, opinionated systems beat large generic SaaS</span>
+        </li>
+        <li class="interest-item">
+          <span class="interest-item__label">Unstructured → production</span>
+          <span class="interest-item__body">turning unstructured inputs into workflows that actually hold up</span>
+        </li>
+      </ul>
+      <p>
+        I care less about "AI features" and more about whether something meaningfully reduces
+        friction, time, or cognitive load.
+      </p>
+    </section>
+
+    <!-- Current tool stack -->
+    <section class="section section--prose section--last scroll-animate">
+      <span class="section__eyebrow">Tools</span>
+      <h2>Current tool stack</h2>
+      <p class="tool-stack">
+        <span class="tool-tag">Claude Code</span>
+        <span class="tool-tag">MCP servers</span>
+        <span class="tool-tag">Google Drive</span>
+        <span class="tool-tag">Jira</span>
+        <span class="tool-tag">Google Gems</span>
+        <span class="tool-tag">Comet</span>
+        <span class="tool-tag">Sider.ai</span>
+        <span class="tool-tag">Notion</span>
+        <span class="tool-tag">Project IDX</span>
+        <span class="tool-tag">Positron</span>
+        <span class="tool-tag">Obsidian</span>
+        <span class="tool-tag">Databricks</span>
+        <span class="tool-tag">QuickSight</span>
+      </p>
+    </section>
+
+  </div>
 </Base>
 
+<script>
+  // Scroll-triggered entrance animations via IntersectionObserver
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  );
+
+  // Observe scroll-animated elements (not the hero, which animates on load)
+  document.querySelectorAll('.scroll-animate').forEach((el) => {
+    observer.observe(el);
+  });
+
+  // ── Magnetic tilt on post/project items ──────────────────────────
+  const TILT_MAX = 3; // degrees
+  const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!noMotion) document.querySelectorAll<HTMLElement>('.post-item, .project-item').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / (rect.width / 2);
+      const dy = (e.clientY - cy) / (rect.height / 2);
+      card.style.transform = `perspective(600px) rotateX(${-dy * TILT_MAX}deg) rotateY(${dx * TILT_MAX}deg)`;
+      card.style.transition = 'transform 80ms linear';
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg)';
+      card.style.transition = `transform ${getComputedStyle(document.documentElement).getPropertyValue('--duration-base')} ${getComputedStyle(document.documentElement).getPropertyValue('--ease-out')}`;
+    });
+  });
+</script>
+
 <style>
-  .hero {
+  .home {
     max-width: var(--prose-width);
-    margin: 4rem auto;
+    margin: 0 auto;
     padding: 0 1.5rem;
+  }
+
+  /* ── Full-bleed cover — behind sticky nav ─── */
+  .cover {
+    width: 100%;
+    /* Pull up by 4rem to fully cover the sticky nav at any viewport */
+    height: calc(420px + 4rem);
+    margin-top: -4rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    display: block;
+  }
+
+  /* Dark gradient at the bottom for title legibility */
+  .cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(44, 40, 37, 0.62) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Title overlaid at the bottom of the cover image */
+  .cover__title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 0 1.5rem 1.75rem;
+    max-width: calc(var(--prose-width) + 3rem);
+    margin: 0 auto;
   }
 
   h1 {
     font-family: var(--font-serif);
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    font-size: clamp(1.75rem, 4vw, var(--text-3xl));
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(44, 40, 37, 0.5);
   }
 
-  p {
+  /* ── Page header — sits directly below cover ─ */
+  .page-header {
+    padding: var(--space-6) 0 var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .page-header__intro {
+    line-height: 1.8;
+    margin-bottom: 0.5rem;
+    max-width: 58ch;
+  }
+
+  .page-header__role {
     color: var(--color-muted);
-    font-size: 1.1rem;
+    font-size: var(--text-sm);
+    margin: 0;
+    padding-top: var(--space-4);
+    border-top: 2px solid var(--color-accent-2);
+    display: inline-block;
+  }
+
+  @media (max-width: 640px) {
+    .cover {
+      height: calc(300px + 4rem);
+    }
+  }
+
+  /* ── Section eyebrow labels ───────────────── */
+  .section__eyebrow {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: var(--space-2);
+  }
+
+  /* ── Sections ─────────────────────────────── */
+  .section {
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* Raised surface — Experiments */
+  .section--raised {
+    background: var(--color-bg-raised);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    margin: 0 -1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Sage left-border — Looking forward to */
+  .section--sage {
+    border-left: 3px solid var(--color-accent-2);
+    padding-left: 1.5rem;
+    margin-left: -1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .section--last {
+    border-bottom: none;
+    padding-bottom: var(--space-16);
+  }
+
+  .section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .section__header > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.25rem;
+  }
+
+  .section__header h2 { margin: 0; }
+
+  .section__more {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    padding-top: 1.4rem;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .section__more:hover { color: var(--color-accent); }
+
+  .section__footer {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section__all {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .section__all:hover { color: var(--color-accent); }
+
+  /* Prose sections */
+  .section--prose p {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .section--prose ul,
+  .section--prose ol {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .section--prose li {
+    margin-bottom: 0.6rem;
+    line-height: 1.7;
+  }
+
+
+  /* ── Callout cards (Where I come from) ──── */
+  .callout-card {
+    background: var(--color-bg-raised);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: var(--space-4) var(--space-6);
+    margin-bottom: var(--space-4);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .callout-card__label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: var(--space-2);
+    letter-spacing: 0.01em;
+  }
+
+  .callout-card p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+
+  /* ── Interest list feature rows ──────────── */
+  .interest-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .interest-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  .interest-item:hover {
+    border-color: var(--color-border-hover);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .interest-item__label {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .interest-item__body {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    line-height: 1.55;
+  }
+
+  /* ── Tool stack tags ─────────────────────── */
+  .tool-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .tool-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-xl);
+    white-space: nowrap;
+  }
+
+  /* ── Post list ───────────────────────────── */
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .post-item,
+  .project-item {
+    will-change: transform;
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.75rem;
+    margin: 0 -0.75rem;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .post-item__title {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .post-item__title:hover { color: var(--color-accent); }
+
+  .post-item__desc {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    margin: 0 0 0.3rem;
+    line-height: 1.55;
+  }
+
+  .post-item__date {
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Project list ────────────────────────── */
+  .project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .project-item__header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .project-item__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .project-item__title:hover { color: var(--color-accent); }
+
+  .project-item__live {
+    font-size: 0.8rem;
+    color: var(--color-faint);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .project-item__live:hover { color: var(--color-accent); }
+
+  .project-item__desc {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    margin: 0 0 0.4rem;
+    line-height: 1.55;
+  }
+
+  .project-item__tech {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .tech-tag {
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-xl);
+    font-family: var(--font-mono);
+  }
+
+  /* ── Bookmark cards ──────────────────────── */
+  .bookmark-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .bookmark {
+    display: flex;
+    align-items: stretch;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-6);
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--shadow-sm);
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-out);
+  }
+
+  .bookmark:hover {
+    border-color: var(--color-border-hover);
+    border-left-color: var(--color-accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    color: inherit;
+  }
+
+  .bookmark__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .bookmark__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.35;
+    margin-bottom: var(--space-1);
+  }
+
+  .bookmark__desc {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: var(--space-2);
+  }
+
+  .bookmark__url {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    letter-spacing: 0.02em;
   }
 </style>
