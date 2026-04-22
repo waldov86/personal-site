@@ -119,17 +119,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 
     margin-bottom: 0.85rem;
   }
 
-  /* Drop cap on first paragraph */
-  .prose :global(p:first-of-type::first-letter) {
-    font-family: var(--font-serif);
-    font-size: 3.5em;
-    font-weight: 600;
-    color: var(--color-accent);
-    float: left;
-    line-height: 0.82;
-    margin: 0.06em 0.1em 0 0;
-  }
-
   /* Ornamental section break */
   .prose :global(hr) {
     border: none;
@@ -197,6 +186,14 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 
 
   .prose :global(strong) {
     font-weight: 600;
+  }
+
+  .prose :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+    margin: 1.5rem 0;
+    display: block;
   }
 
   .prose :global(table) {
