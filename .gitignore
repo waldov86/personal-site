@@ -31,3 +31,6 @@ cv-widget/
 planning/
 style.md
 blog post dates.md
+
+# Claude Code internal config
+.claude/
