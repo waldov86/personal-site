@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We can each build anything. So why can't we build together?</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤝</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #00B140;
+  --green-dark: #008f33;
+  --green-bg: #f0fdf4;
+  --green-border: #bbf7d0;
+  --bg: #ffffff;
+  --ink: #111827;
+  --ink2: #374151;
+  --muted: #6b7280;
+  --card: #f8fafc;
+  --card-border: #e5e7eb;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --red-soft: #fef2f2;
+  --act-bg: #111827;
+}
+* { box-sizing: border-box; }
+
+.reveal {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+}
+.reveal .slides { background: var(--bg); }
+.reveal .slides section {
+  background: var(--bg);
+  padding: 52px 80px 44px;
+  text-align: left;
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--ink);
+}
+.reveal .slides section.act-slide {
+  background: var(--act-bg);
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ── TYPOGRAPHY ── */
+.reveal h1 {
+  font-size: 64px; font-weight: 900; line-height: 1.05;
+  color: var(--ink); text-transform: none; letter-spacing: -0.03em; margin: 0 0 10px;
+}
+.reveal h2 {
+  font-size: 36px; font-weight: 800; color: var(--ink);
+  text-transform: none; letter-spacing: -0.02em;
+  margin: 0 0 22px; display: flex; align-items: center; gap: 12px;
+}
+.reveal p { font-size: 20px; line-height: 1.6; color: var(--ink2); margin: 0 0 14px; }
+.reveal ul { list-style: none; padding: 0; margin: 0; }
+.reveal ul li {
+  font-size: 19px; line-height: 1.5; padding: 5px 0 5px 24px;
+  position: relative; color: var(--ink2);
+}
+.reveal ul li::before { content: '▸'; color: var(--green); position: absolute; left: 0; font-size: 14px; top: 8px; }
+.reveal a { color: var(--green); text-decoration: none; }
+
+.accent { color: var(--green); }
+.muted { color: var(--muted) !important; }
+.bold { font-weight: 700; }
+
+/* ── ACT HEADER SLIDE ── */
+.act-number {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 14px;
+}
+.act-title {
+  font-size: 56px; font-weight: 900; line-height: 1.05; color: #fff;
+  letter-spacing: -0.03em; margin: 0;
+}
+.act-sub {
+  font-size: 20px; color: #9ca3af; margin-top: 14px; font-weight: 400;
+}
+.act-line {
+  width: 52px; height: 4px; background: var(--green); border-radius: 2px; margin-bottom: 22px;
+}
+
+/* ── LAYOUT ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+/* ── CARDS ── */
+.card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px 22px; }
+.card-green { background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 14px; padding: 20px 22px; }
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block; background: var(--green); color: #fff;
+  font-weight: 700; font-size: 13px; padding: 3px 11px; letter-spacing: 0.05em;
+  border-radius: 20px; margin-right: 8px; text-transform: uppercase;
+}
+.badge-dim {
+  display: inline-block; background: var(--card); color: var(--muted); border: 1px solid var(--card-border);
+  font-weight: 700; font-size: 13px; padding: 3px 11px; letter-spacing: 0.05em;
+  border-radius: 20px; margin-right: 8px; text-transform: uppercase;
+}
+
+/* ── LEVELS ── */
+.level-row {
+  display: flex; align-items: center; gap: 22px;
+  padding: 16px 22px; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-left: 5px solid transparent; margin-bottom: 10px;
+}
+.level-row.active { border-left-color: var(--green); }
+.level-icon { font-size: 26px; width: 34px; text-align: center; flex-shrink: 0; }
+.level-label { font-weight: 700; font-size: 20px; color: var(--ink); min-width: 200px; }
+.level-row.active .level-label { color: var(--ink); }
+.level-desc { font-size: 18px; color: var(--muted); }
+
+/* ── FLOW DIAGRAM ── */
+.flow-diagram {
+  display: flex; align-items: stretch; gap: 0; margin: 16px 0;
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
+  overflow: hidden;
+}
+.flow-node {
+  flex: 1; padding: 14px 16px; text-align: center; display: flex;
+  flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  border-right: 1px solid var(--card-border);
+}
+.flow-node:last-child { border-right: none; }
+.flow-node.hi { background: var(--green-bg); }
+.flow-node-icon { font-size: 24px; }
+.flow-node-label { font-size: 13px; font-weight: 600; color: var(--ink2); }
+.flow-node-sub { font-size: 11px; color: var(--muted); }
+.flow-node.hi .flow-node-label { color: var(--green-dark); }
+.flow-arrow-between {
+  display: flex; align-items: center; padding: 0 2px;
+  color: var(--muted); font-size: 18px; flex-shrink: 0;
+}
+
+/* ── CALLOUT ── */
+.callout {
+  background: var(--green-bg); border-left: 4px solid var(--green);
+  border-radius: 0 10px 10px 0; padding: 14px 20px;
+  font-size: 18px; font-weight: 600; color: var(--green-dark); line-height: 1.4; margin: 14px 0 0;
+}
+.callout-red {
+  background: var(--red-soft); border-left: 4px solid var(--red);
+  border-radius: 0 10px 10px 0; padding: 14px 20px;
+  font-size: 18px; font-weight: 600; color: #b91c1c; margin: 14px 0 0;
+}
+.callout-amber {
+  background: #fffbeb; border-left: 4px solid var(--amber);
+  border-radius: 0 10px 10px 0; padding: 14px 20px;
+  font-size: 18px; font-weight: 600; color: #92400e; margin: 14px 0 0;
+}
+
+/* ── BIG QUOTE ── */
+.big-quote {
+  font-size: 28px; font-weight: 700; line-height: 1.3; color: var(--ink);
+  letter-spacing: -0.02em; margin: 0 0 16px;
+}
+.big-quote .hl { color: var(--green); }
+
+/* ── IFRAME ── */
+.iframe-wrap {
+  border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); height: 340px;
+}
+.iframe-wrap iframe { width: 100%; height: 100%; border: none; }
+
+/* ── COMPARE TABLE ── */
+.compare-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+.compare-table th { font-size: 15px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 0 18px 8px; text-align: left; }
+.compare-table td { font-size: 19px; padding: 14px 20px; background: var(--card); color: var(--ink2); }
+.compare-table td:first-child { border-radius: 10px 0 0 10px; border-left: 4px solid var(--green); }
+.compare-table td:last-child { border-radius: 0 10px 10px 0; }
+
+/* ── Q CARDS ── */
+.q-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 18px 20px; font-size: 17px; line-height: 1.5; color: var(--ink2); }
+.q-num { font-size: 28px; font-weight: 900; color: var(--green); line-height: 1; margin-bottom: 8px; }
+
+/* ── NATE CREDIT ── */
+.nate-credit {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 20px; padding: 7px 18px 7px 10px;
+  font-size: 15px; color: var(--muted); margin-top: 18px; text-decoration: none;
+}
+.nate-avatar {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: white; font-weight: 800; flex-shrink: 0;
+}
+
+/* ── SLIDE META ── */
+.slide-meta { font-size: 15px; color: var(--muted); display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+.ka-pip { width: 10px; height: 10px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.title-eyebrow { font-size: 16px; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
+.title-divider { width: 64px; height: 5px; background: var(--green); border-radius: 2px; margin: 24px 0; }
+
+/* ── STAT ── */
+.stat-big { font-size: 56px; font-weight: 900; color: var(--green); line-height: 1; }
+.stat-label { font-size: 16px; color: var(--muted); margin-top: 4px; }
+
+/* ── REVEAL CHROME ── */
+.reveal .progress { background: var(--green-border); }
+.reveal .progress span { background: var(--green); }
+.reveal .slide-number { color: var(--muted); font-size: 12px; }
+.reveal .controls button { color: var(--green); }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══ TITLE ══ -->
+<section>
+  <div style="max-width:820px;">
+    <div class="title-eyebrow">AI Camp Berlin · April 2026</div>
+    <h1>We can each build anything.</h1>
+    <h1 style="color:var(--green);">So why can't we<br>build together?</h1>
+    <div class="title-divider"></div>
+    <div class="slide-meta">
+      <div class="ka-pip"></div>
+      Waldo Vanderhaeghen &nbsp;·&nbsp; Kleinanzeigen
+    </div>
+  </div>
+</section>
+
+<!-- ══ ACT 1 ══ -->
+<section class="act-slide">
+  <div class="act-number">Act 1</div>
+  <div class="act-line"></div>
+  <div class="act-title">The Ladder</div>
+  <div class="act-sub">A framework for where you are</div>
+</section>
+
+<!-- ── 5 LEVELS ── -->
+<section>
+  <h2>🪜 The 5 Levels of AI Integration</h2>
+  <div>
+    <div class="level-row">
+      <span class="level-icon">⌨️</span>
+      <span class="level-label">L1 — Autocomplete</span>
+      <span class="level-desc">AI finishes your sentences. You still write everything.</span>
+    </div>
+    <div class="level-row">
+      <span class="level-icon">💬</span>
+      <span class="level-label">L2 — Chat</span>
+      <span class="level-desc">Describe intent, AI generates. No execution, no verification.</span>
+    </div>
+    <div class="level-row active">
+      <span class="level-icon">🤝</span>
+      <span class="level-label">L3 — Agentic</span>
+      <span class="level-desc">AI navigates, reads, plans, executes multi-step. You review.</span>
+    </div>
+    <div class="level-row active">
+      <span class="level-icon">⚙️</span>
+      <span class="level-label">L4 — Harness</span>
+      <span class="level-desc">AI runs its own feedback loop. You define inputs + outputs.</span>
+    </div>
+    <div class="level-row">
+      <span class="level-icon">🏭</span>
+      <span class="level-label">L5 — Dark Factory</span>
+      <span class="level-desc">AI owns the full pipeline. You write specs only.</span>
+    </div>
+  </div>
+  <a href="https://natesnewsletter.substack.com/p/the-5-level-framework-that-explains" class="nate-credit" target="_blank">
+    <div class="nate-avatar">NB</div>
+    <span>Framework by <strong>Nate B. Jones</strong> — The Nate Newsletter · Substack</span>
+  </a>
+</section>
+
+<!-- ══ ACT 2 ══ -->
+<section class="act-slide">
+  <div class="act-number">Act 2</div>
+  <div class="act-line"></div>
+  <div class="act-title">My Journey</div>
+  <div class="act-sub">From superpowers to getting lost</div>
+</section>
+
+<!-- ── INVOICE — L2 ── -->
+<section>
+  <h2>✉️ L2 — Invoice automation</h2>
+  <div class="two-col" style="align-items:start; gap:24px;">
+    <div>
+      <p style="font-size:22px; font-weight:700; color:var(--ink); margin-bottom:6px;">Drop a PDF. Never touch it again.</p>
+      <p style="color:var(--muted); margin-bottom:18px;">Vendor, date, amount, category — extracted and filed automatically. Zero infrastructure, zero cost.</p>
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <div class="flow-node-icon">📂</div>
+          <div class="flow-node-label">Drive Inbox</div>
+          <div class="flow-node-sub">drop PDF</div>
+        </div>
+        <div class="flow-arrow-between">→</div>
+        <div class="flow-node hi">
+          <div class="flow-node-icon">🧠</div>
+          <div class="flow-node-label">Gemini Flash</div>
+          <div class="flow-node-sub">extract JSON</div>
+        </div>
+        <div class="flow-arrow-between">→</div>
+        <div class="flow-node">
+          <div class="flow-node-icon">⚙️</div>
+          <div class="flow-node-label">Logic layer</div>
+          <div class="flow-node-sub">route + dedupe</div>
+        </div>
+        <div class="flow-arrow-between">→</div>
+        <div class="flow-node">
+          <div class="flow-node-icon">📊</div>
+          <div class="flow-node-label">Sheets</div>
+          <div class="flow-node-sub">vendor · amount · category</div>
+        </div>
+        <div class="flow-arrow-between">→</div>
+        <div class="flow-node">
+          <div class="flow-node-icon">📁</div>
+          <div class="flow-node-label">Archive</div>
+          <div class="flow-node-sub">filed by year</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:13px; color:var(--muted); margin-bottom:3px;">Architecture</div>
+          <div style="font-size:15px; font-weight:700;">Google Apps Script + Gemini</div>
+        </div>
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:13px; color:var(--muted); margin-bottom:3px;">Monthly cost</div>
+          <div style="font-size:15px; font-weight:700; color:var(--green);">€0</div>
+        </div>
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:13px; color:var(--muted); margin-bottom:3px;">Self-healing</div>
+          <div style="font-size:15px; font-weight:700;">learns new vendors</div>
+        </div>
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:13px; color:var(--muted); margin-bottom:3px;">Audit trail</div>
+          <div style="font-size:15px; font-weight:700;">every decision logged</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:20px; height:100%; min-height:340px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">Spreadsheet output</div>
+        <div style="background:white; border:1px solid var(--card-border); border-radius:8px; overflow:hidden; flex:1;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+              <tr style="background:#f1f5f9;">
+                <th style="padding:8px 12px; text-align:left; font-weight:600; color:var(--muted); border-bottom:1px solid var(--card-border);">Date</th>
+                <th style="padding:8px 12px; text-align:left; font-weight:600; color:var(--muted); border-bottom:1px solid var(--card-border);">Vendor</th>
+                <th style="padding:8px 12px; text-align:left; font-weight:600; color:var(--muted); border-bottom:1px solid var(--card-border);">Amount</th>
+                <th style="padding:8px 12px; text-align:left; font-weight:600; color:var(--muted); border-bottom:1px solid var(--card-border);">Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:8px 12px; color:var(--ink2);">2026-04-01</td>
+                <td style="padding:8px 12px; font-weight:600; color:var(--ink);">Vodafone</td>
+                <td style="padding:8px 12px; color:var(--ink2);">€49.99</td>
+                <td style="padding:8px 12px;"><span style="background:var(--green-bg); color:var(--green-dark); font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">Telekommunikation</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:8px 12px; color:var(--ink2);">2026-04-03</td>
+                <td style="padding:8px 12px; font-weight:600; color:var(--ink);">WeWork</td>
+                <td style="padding:8px 12px; color:var(--ink2);">€350.00</td>
+                <td style="padding:8px 12px;"><span style="background:#eff6ff; color:#1d4ed8; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">Büro</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:8px 12px; color:var(--ink2);">2026-04-08</td>
+                <td style="padding:8px 12px; font-weight:600; color:var(--ink);">AWS</td>
+                <td style="padding:8px 12px; color:var(--ink2);">€12.40</td>
+                <td style="padding:8px 12px;"><span style="background:#fdf4ff; color:#7e22ce; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">Software</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:8px 12px; color:var(--ink2);">2026-04-12</td>
+                <td style="padding:8px 12px; font-weight:600; color:var(--ink);">Lidl</td>
+                <td style="padding:8px 12px; color:var(--ink2);">€28.15</td>
+                <td style="padding:8px 12px;"><span style="background:#fff7ed; color:#c2410c; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">Bürobedarf</span></td>
+              </tr>
+              <tr>
+                <td style="padding:8px 12px; color:var(--ink2);">2026-04-15</td>
+                <td style="padding:8px 12px; font-weight:600; color:var(--ink);">Notion</td>
+                <td style="padding:8px 12px; color:var(--ink2);">€16.00</td>
+                <td style="padding:8px 12px;"><span style="background:#fdf4ff; color:#7e22ce; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">Software</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:var(--green); display:inline-block;"></span>
+          MD5 dedupe · script_log audit · Drive verification
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ACT 3 ══ -->
+<section class="act-slide">
+  <div class="act-number">Act 3</div>
+  <div class="act-line"></div>
+  <div class="act-title">L3 — Agentic AI</div>
+  <div class="act-sub">AI as the problem-solving teammate</div>
+</section>
+
+<!-- ── CAMPAIGN ── -->
+<section>
+  <h2>📈 L3 — Campaign analysis pipeline</h2>
+  <div class="two-col" style="gap:24px; align-items:start;">
+    <div>
+      <div class="card" style="border-top:4px solid var(--red); margin-bottom:14px;">
+        <div style="font-size:17px; font-weight:700; margin-bottom:10px;">😰 The problem</div>
+        <p style="font-size:16px; color:var(--muted); margin-bottom:8px; font-style:italic;">"The reviews that happened were symptom-driven — something had to go visibly wrong before it got attention."</p>
+        <ul style="font-size:15px;">
+          <li>Everything else got a quick skim or nothing</li>
+          <li>Advertisers got inconsistent advice</li>
+          <li>Patterns across campaigns were invisible — nobody was looking across campaigns</li>
+        </ul>
+      </div>
+      <div class="callout-red" style="margin-top:0;">
+        Manual review per campaign: 40–60 min. Book of 200+ campaigns. The math doesn't work.
+      </div>
+    </div>
+    <div>
+      <div class="card-green" style="border-top:4px solid var(--green); margin-bottom:14px;">
+        <div style="font-size:17px; font-weight:700; margin-bottom:10px;">⚙️ The pipeline</div>
+        <p style="font-size:16px; color:var(--ink2); margin-bottom:8px; font-style:italic;">"A pipeline that runs every night whether anyone asks it to or not."</p>
+        <ul style="font-size:15px;">
+          <li>Every campaign, every night — fully headless</li>
+          <li>Deterministic detection → Claude synthesis → recommendations</li>
+          <li>15-test E2E suite gates every deploy</li>
+        </ul>
+      </div>
+      <div class="callout">
+        "The quality floor went up because nothing gets skipped — not because the ceiling got higher."
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CAMPAIGN — LIVE ── -->
+<section style="padding:0 !important;">
+  <div style="position:relative; width:100%; height:100%;">
+    <iframe id="cvr-iframe" src="https://cvr-optimizer-dashboard.vercel.app/dashboard.html#overview" style="width:100%; height:100%; border:none; display:block;" title="Campaign Analysis Dashboard"
+      onload="document.getElementById('cvr-fallback').style.display='none'"></iframe>
+    <div id="cvr-fallback" style="display:flex; position:absolute; inset:0; background:var(--bg); flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+      <div style="font-size:48px;">📊</div>
+      <div style="font-size:22px; font-weight:700; color:var(--ink);">Campaign Analysis Dashboard</div>
+      <div style="font-size:16px; color:var(--muted); max-width:480px; text-align:center;">Every campaign, every night. Deterministic detection → Claude synthesis → recommendations. 15-test E2E suite gates every deploy.</div>
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <div class="card" style="text-align:center; padding:14px 24px; min-width:120px;">
+          <div style="font-size:32px; font-weight:900; color:var(--green);">100%</div>
+          <div style="font-size:13px; color:var(--muted);">campaigns covered</div>
+        </div>
+        <div class="card" style="text-align:center; padding:14px 24px; min-width:120px;">
+          <div style="font-size:32px; font-weight:900; color:var(--green);">15</div>
+          <div style="font-size:13px; color:var(--muted);">E2E tests</div>
+        </div>
+        <div class="card" style="text-align:center; padding:14px 24px; min-width:120px;">
+          <div style="font-size:32px; font-weight:900; color:var(--green);">0</div>
+          <div style="font-size:13px; color:var(--muted);">manual steps</div>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute; bottom:18px; left:24px; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px); border-radius:10px; padding:8px 16px; display:flex; align-items:center; gap:10px;">
+      <span style="font-size:16px;">⚙️</span>
+      <span style="font-size:14px; font-weight:600; color:white;">L3 — The pipeline, live</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOLO BUILDER TRAP ── -->
+<section>
+  <h2>🪤 Still L3 — the solo builder trap</h2>
+  <p style="color:var(--muted); margin-bottom:16px;">I shipped it. It works. But I'm still the only reviewer, the only debugger, the only one who understands the system.</p>
+  <div class="three-col" style="margin-bottom:14px;">
+    <div class="card" style="border-top:4px solid var(--red); padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">🧠</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">Context is unshared</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted);">The system lives in my head and 50 agent chat sessions. There's no onboarding path. Nobody else can pick this up.</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--red); padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">🔍</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">Review is broken</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted);">It's not really "code" anymore. How do you review a diff when the agent wrote 80% of it and the logic is in the prompts?</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--red); padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">⚡</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">Velocity doesn't transfer</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted);">I can ship a full feature on a Sunday. The moment a second person joins, we're back to meetings, alignment, "can you explain what this does?"</div>
+    </div>
+  </div>
+  <div class="callout-red">
+    At L3 the AI is a teammate — but I'm still the single point of failure. That's the plateau.
+  </div>
+</section>
+
+<!-- ══ ACT 4 INTRO ══ -->
+<section class="act-slide">
+  <div class="act-number">Act 4</div>
+  <div class="act-line"></div>
+  <div class="act-title">L4 Harness-driven,<br>semi-autonomous</div>
+  <div class="act-sub">towards L5, the dark factory</div>
+</section>
+
+<!-- ── L4 WHAT IT IS ── -->
+<section>
+  <h2>⚙️ L4 — what it means</h2>
+  <p style="color:var(--muted); margin-bottom:16px;">You stop managing the code. You start managing the system.</p>
+  <div class="three-col" style="margin-bottom:14px;">
+    <div class="card" style="padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">🤖</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">Self-running loop</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted);">AI writes, tests, reads failures, patches errors — on its own. No human in the middle.</div>
+    </div>
+    <div class="card" style="padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">📐</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">You own the spec</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted);">You define inputs, outputs, acceptance criteria. The system figures out how to get there.</div>
+    </div>
+    <div class="card-green" style="padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">📈</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">System compounds</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--ink2);">Memory layer, self-optimisation, contradictions resolved automatically. Gets smarter without hand-tuning.</div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="callout" style="margin-top:0;">
+      Ship while you sleep. Your job shifts to strategy, not execution. The team works on <em>why</em> and <em>what</em>.
+    </div>
+    <div class="callout-amber" style="margin-top:0;">
+      At L4, the bottleneck is no longer <em>you</em>. It's the quality of your specs — and how well your team collaborates around them.
+    </div>
+  </div>
+</section>
+
+<!-- ── L4 MIRAGE ── -->
+<section>
+  <h2>🪞 The L4 mirage</h2>
+  <img src="https://faust.bot/_nuxt/logo.DJYT_CNl.png" style="height:32px; border-radius:4px; position:absolute; top:52px; right:80px;" onerror="this.style.display='none'">
+  <p style="color:var(--muted); font-style:italic; margin-bottom:14px;">Consulting for <strong style="color:var(--ink);">FaustAI</strong> — an AI documentation startup doing impressive things. This looked like L4 from the outside.</p>
+
+  <div class="two-col" style="margin-bottom:14px;">
+    <div>
+      <div class="card" style="margin-bottom:12px; padding:22px 24px;">
+        <div style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:10px;">What impressed me</div>
+        <ul style="font-size:17px;">
+          <li>Agents running constantly in production</li>
+          <li>Memory layer, contradiction detection, structured output</li>
+          <li>Backend self-optimising prompts at scale</li>
+          <li>Product defining inputs and expected outputs</li>
+        </ul>
+      </div>
+      <div class="callout-amber">
+        Engineer defines the harness. Product defines the spec. Agents do the work. Looks like L4. ✅
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px; border-top:4px solid var(--amber); padding:22px 24px;">
+        <div style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:10px;">The collaboration gap</div>
+        <ul style="font-size:17px;">
+          <li>Only one person fully understands the system</li>
+          <li>No closed feedback loop — output quality still requires hand-tuning</li>
+          <li>Remove the engineer → everything stops</li>
+          <li>Product can define <em>what</em> good looks like, but can't verify <em>how</em> to get there</li>
+        </ul>
+      </div>
+      <div class="callout-amber">
+        The engineer <em>is</em> the harness. Smart system — but not yet a collaborative one.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT I'VE TRIED ── -->
+<section>
+  <h2>🫀 Be more human, among bots</h2>
+  <p style="color:var(--muted); margin-bottom:14px;">Some things I've tried. They help — but they don't fully solve it.</p>
+
+  <div class="three-col" style="margin-bottom:14px;">
+    <div class="card" style="padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">🎫</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">Open-ended tickets</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted); margin-bottom:14px;">Jira-skill staying human among bots: avoid overspecification, define problem + desired outcome, but leave more for teammates to fill in — AI can fill in the rest.</div>
+      <div style="font-size:13px; padding:6px 12px; background:var(--green-bg); color:var(--green-dark); border-radius:6px; font-weight:600; display:inline-block;">✓ staying human among bots</div>
+    </div>
+    <div class="card" style="padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">🤝</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">Backlog refinement</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted); margin-bottom:14px;">Open-ended tickets provide fertile ground for active discussion. Teammates — aka "agent-representatives" — discuss how the puzzle pieces fit together.</div>
+      <div style="font-size:13px; padding:6px 12px; background:var(--green-bg); color:var(--green-dark); border-radius:6px; font-weight:600; display:inline-block;">✓ slows the right things down</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber); padding:28px 30px;">
+      <div style="font-size:34px; margin-bottom:12px;">❓</div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:10px;">Still unsolved</div>
+      <div style="font-size:19px; line-height:1.65; color:var(--muted); margin-bottom:14px;">What does code review mean at L4? How do you onboard? Who owns a system that is mostly prompts?</div>
+      <div style="font-size:13px; padding:6px 12px; background:#fffbeb; color:#92400e; border-radius:6px; font-weight:600; display:inline-block;">⚠ no good answer yet</div>
+    </div>
+  </div>
+
+  <div class="callout-amber">
+    These are patches, not a system. The real question: what does <em>team</em> collaboration look like when everyone has an agent running?
+  </div>
+</section>
+
+<!-- ══ ACT 5 ══ -->
+<section class="act-slide">
+  <div class="act-number">Act 5</div>
+  <div class="act-line"></div>
+  <div class="act-title">The Open Question</div>
+  <div class="act-sub">I don't have the answer. I think this room might.</div>
+</section>
+
+<!-- ── OPEN QUESTIONS ── -->
+<section>
+  <h2>🤔 Questions I'm carrying</h2>
+  <p style="color:var(--muted); margin-bottom:16px;">What does an AI-native <em>team</em> actually look like?</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+    <div class="q-card">
+      <div class="q-num">01</div>
+      How do you onboard someone into a project built by one person + 50 agent sessions?
+    </div>
+    <div class="q-card">
+      <div class="q-num">02</div>
+      What does "code review" mean when the agent wrote 80% of it?
+    </div>
+    <div class="q-card">
+      <div class="q-num">03</div>
+      Who owns the system when it's mostly prompts and harnesses?
+    </div>
+    <div class="q-card">
+      <div class="q-num">04</div>
+      Is a PM's job now: write better specs, run better refinements, stay out of the way?
+    </div>
+  </div>
+  <div class="callout" style="text-align:center;">
+    We've solved individual velocity. We haven't solved collective intelligence.
+  </div>
+</section>
+
+<!-- ── LET'S TALK ── -->
+<section>
+  <h2>🎤 Let's talk</h2>
+  <p style="color:var(--muted); margin-bottom:20px;">Open facilitation — 15–20 min</p>
+  <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:22px;">
+    <div class="card" style="display:flex; gap:18px; align-items:center;">
+      <span style="font-size:32px; flex-shrink:0;">🪜</span>
+      <div style="font-size:18px; font-weight:600;">Where are you on the ladder — individually vs. as a team?</div>
+    </div>
+    <div class="card" style="display:flex; gap:18px; align-items:center;">
+      <span style="font-size:32px; flex-shrink:0;">🧩</span>
+      <div style="font-size:18px; font-weight:600;">Has anyone cracked the onboarding/context problem in an AI-native codebase?</div>
+    </div>
+    <div class="card" style="display:flex; gap:18px; align-items:center;">
+      <span style="font-size:32px; flex-shrink:0;">🐢</span>
+      <div style="font-size:18px; font-weight:600;">What's the hardest thing to do <em>together</em> that used to be hard alone?</div>
+    </div>
+  </div>
+  <div class="slide-meta">
+    <div class="ka-pip"></div>
+    Waldo Vanderhaeghen &nbsp;·&nbsp; Kleinanzeigen &nbsp;·&nbsp; waldo@vanderlore.de &nbsp;·&nbsp; <a href="https://waldo.vanderlore.de" target="_blank">waldo.vanderlore.de</a>
+  </div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, progress: true, slideNumber: 'c/t', controls: true,
+    transition: 'fade', transitionSpeed: 'fast',
+    width: 1280, height: 720, margin: 0, minScale: 0.1, maxScale: 2.0,
+  });
+</script>
+</body>
+</html>
