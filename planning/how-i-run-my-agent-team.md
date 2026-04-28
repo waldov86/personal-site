@@ -24,7 +24,9 @@ The problem wasn't the agent. It was that I'd stripped away every management str
 
 ## The kanban board
 
-Three Markdown files and an Obsidian plugin. Board with three columns, each card a wikilink to a story file.
+Three Markdown files and an Obsidian plugin.
+
+**Board file** (`kanban-cvr-analyzer.md`) — the Obsidian Kanban plugin renders this as a board. Three columns: `Backlog`, `In Progress`, `Done`. Each card is a wikilink to a story file. Nothing else.
 
 ```markdown
 ## Backlog
@@ -35,6 +37,22 @@ Three Markdown files and an Obsidian plugin. Board with three columns, each card
 
 ## Done
 - [x] [[PRJ-008-deploy-pipeline|PRJ-008 Deploy pipeline refactor]]
+```
+
+**Story files** (`CVR-NNN-slug.md`) — one per card. Here's the actual schema:
+
+```
+Status / Type / Priority / Scope / Created / Started / Completed
+Goal — one sentence
+Context — why this exists, what problem it solves
+Acceptance Criteria
+  Hard gates: binary pass/fail conditions
+  Soft checks: expected-true flags, worth noting if not
+Pipeline phases — which steps are in scope
+Execution plan
+Blocker — type / description / unblock condition
+Context update checklist — what docs to update after
+Work log — timestamped entries per session
 ```
 
 Hard gates are the definition of done — the story doesn't move until every one is checked. When something can't proceed, the card stays in Backlog marked `⚠️ BLOCKED`.
