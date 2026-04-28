@@ -93,9 +93,8 @@ That's the bet I'm making: the patterns from SDLC transfer, and the closer we fo
 
 The next SDLC primitive I'm working on is the retro. Two experiments, both still rough:
 
-A **weekly review skill** that synthesises how my way of working is evolving — across coaching, tooling, and product work — and gives each new session a basis to iterate from rather than starting cold.
-
-An **agent retro skill** that periodically analyses patterns across sessions: which skills I reach for most, which tasks get repeated or abandoned, where the gaps are. The sprint retro equivalent, but for the workflow itself.
+- A **weekly review skill** — a structured moment to step back, reflect on how the week went, and carry the useful parts forward.
+- An **agent retro skill** — pattern analysis across sessions: which skills I reach for, which tasks get repeated or abandoned, where the gaps are.
 
 Neither is ready to share. But the direction feels right.
 
