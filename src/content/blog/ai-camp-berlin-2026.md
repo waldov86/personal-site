@@ -73,7 +73,17 @@ Real L4 needs to be legible to someone other than its author. That's the part no
 
 ## The same problem, in every room
 
-My session was in the morning. I spent the rest of the day walking into other rooms — agent orchestration, knowledge management, team velocity, tooling — and the same challenge kept surfacing. Different framing, different industry, different stack. Same underlying thing.
+My session was in the morning. I spent the rest of the day walking into other rooms — and the same challenge kept surfacing. Different framing, different industry, different stack. Same underlying thing.
+
+Jan-Peter Kalus from Helion ran a session titled *"I'm Not a Developer with an AI Tool — I'm a PM with an AI Developer"*. His point: the PM's job is now to be the structured, reproducible interface between the human intent and the AI building it. The role hasn't disappeared — it's shifted entirely toward specification and ownership.
+
+Markus Andrezak from überproduct put it even more directly: lots of AI is still about individual contributions — "my newly developed skill", "my chief of staff". But how does sharing of skills and context actually work across departments? He didn't have a clean answer either.
+
+Jakub Mierzewski from Atlassian ran a lightning talk on exactly the question I'd opened with: agents and people teams — how do you collaborate, and what are the top challenges? Same room, different audience, same unsolved problem.
+
+Tim Schikora from Aklamio went after the infrastructure layer: how do you handle context, skills, and project files across an organisation? Git isn't accessible enough. GDrive isn't structured enough for review. Does the answer require a custom Markdown editor that sits between the two?
+
+And Dirk Bartels from Bain asked the strategic version: *Agentic AI in SDLC — should we build more, or should we build better?* AI tooling adoption is widespread. Results are lagging. The question is whether we're reaching for the wrong lever.
 
 **It's all about shared context, shared knowledge, shared data.**
 
