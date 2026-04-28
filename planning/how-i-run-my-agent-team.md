@@ -129,10 +129,6 @@ I've built two partial mitigations. The first is the context update checklist in
 
 It's still slow. It's still the only thing that works consistently. The goal is to make the standing instructions file the source of truth for anything a future-session agent would otherwise have to re-derive or re-ask.
 
----
-
-At AI Bar Camp Berlin last week, [every room circled back to the same problem](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/): shared context, shared process, legibility across sessions and people. Nobody has cracked it.
-
 What I have is a team that ships. Not elegantly. But consistently.
 
 The kanban board is embarrassingly low-tech. It's also the most important thing in the setup.
