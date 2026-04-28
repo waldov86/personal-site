@@ -1,0 +1,59 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const skills = await getCollection('skills');
+  return skills.map(skill => ({
+    params: { slug: skill.id.replace(/\.md$/, '') },
+    props: { skill },
+  }));
+}
+
+const { skill } = Astro.props;
+const { Content } = await render(skill);
+---
+
+<Base title={`${skill.data.title} — Skills`} description={skill.data.description}>
+  <div class="page">
+    <a href="/skills/" class="back">← Skills</a>
+    <article class="prose">
+      <Content />
+    </article>
+    <div class="install">
+      <p>Install: save this file to <code>~/.claude/commands/{skill.id}</code></p>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    max-width: var(--prose-width);
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .back {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .back:hover { color: var(--color-accent); }
+
+  .prose {
+    line-height: 1.7;
+  }
+
+  .install {
+    margin-top: 3rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+  .install p { margin: 0; }
+</style>

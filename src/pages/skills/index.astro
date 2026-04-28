@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const skills = await getCollection('skills');
+const sorted = skills.sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+
+<Base
+  title="Skills — Waldo Vanderhaeghen"
+  description="Claude Code skill files — drop them into ~/.claude/commands/ and invoke with a slash command."
+>
+  <div class="page">
+    <h1>Skills</h1>
+    <p class="intro">Claude Code slash commands. Drop any file into <code>~/.claude/commands/</code> and invoke it with the command name.</p>
+    <ul class="skill-list">
+      {sorted.map(skill => (
+        <li class="skill-item">
+          <a href={`/skills/${skill.id.replace(/\.md$/, '')}/`} class="skill-item__title">{skill.data.title}</a>
+          <p class="skill-item__desc">{skill.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .page {
+    max-width: var(--prose-width);
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .intro {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .skill-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .skill-item {
+    border-bottom: 1px solid var(--color-border);
+    padding: 1.5rem 0;
+  }
+  .skill-item:first-child { border-top: 1px solid var(--color-border); }
+
+  .skill-item__title {
+    display: block;
+    font-family: var(--font-mono, monospace);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    margin-bottom: 0.4rem;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .skill-item__title:hover { color: var(--color-accent); }
+
+  .skill-item__desc {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+  }
+</style>

@@ -69,7 +69,7 @@ Nothing gets worked on without a story.
 
 The team is a Markdown file. Named roles, called at specific points in the process.
 
-The most useful one is [`/refinement-team-deep`](/skills/refinement-team-deep.md) — the planning council. Six sequential agents: Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesises all five. Each addresses a flaw the previous one didn't.
+The most useful one is [`/refinement-team-deep`](/skills/refinement-team-deep) — the planning council. Six sequential agents: Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesises all five. Each addresses a flaw the previous one didn't.
 
 Concrete example: I was redesigning a campaign analysis pipeline. The council flagged that shipping the new classification layer and the rendering change together would make it impossible to isolate regressions. The revised plan split them into separate stories — ship the classifier first in shadow mode, verify it on known cases, only then open the rendering work.
 
