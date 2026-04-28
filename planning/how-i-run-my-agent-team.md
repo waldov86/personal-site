@@ -1,14 +1,14 @@
 ---
-title: "AI agents don't need better prompts. They need a backlog."
-description: "The thing missing from most agent setups isn't model quality or tool use. It's project management. Old patterns, new actors."
+title: "Scrum for AI agents. Zero complaints about estimation."
+description: "The thing missing from most agent setups isn't model quality or tool use. It's project management. Old patterns, new actors — and finally a team that doesn't hate the tickets."
 pubDate: 2026-04-28
 tags: ["ai", "agents", "workflow", "claude-code", "engineering"]
 hasMermaid: false
 ---
 
-The most useful thing I've done for my agent setup wasn't a new model or a better prompt.
+I run Scrum with my AI agents. Backlog grooming, story files, acceptance criteria, a pickup command that acts as the sprint. No estimation complaints. No pushback on the process. No passive-aggressive Slack messages about ticket quality.
 
-It was adding a kanban board.
+The most useful thing I've done for my agent setup wasn't a new model or a better prompt. It was adding a kanban board.
 
 ---
 
@@ -123,6 +123,6 @@ It's still slow. It's still the only thing that works consistently.
 
 At AI Bar Camp Berlin last week, [every room circled back to the same problem](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/): shared context, shared process, legibility across sessions and people. Nobody has cracked it.
 
-What I have is a team that ships. Not elegantly. But consistently.
+What I have is a team that ships. No estimation debates. No one calling the tickets too vague. Just a backlog, a pickup command, and work that gets done.
 
 The kanban board is embarrassingly low-tech. It's also the most important thing in the setup.
