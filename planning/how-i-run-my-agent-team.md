@@ -93,6 +93,6 @@ That's the bet I'm making: the patterns from SDLC transfer, and the closer we fo
 
 The open problems are real though. Context doesn't fully survive session boundaries — I've patched this with memory files and a weekly review skill that rebuilds state, but it's not elegant. Decision rationale evaporates from transcripts. Shared context across sessions and collaborators is still unsolved. [At AI Bar Camp Berlin last week, every room circled back to the same questions](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/). Nobody has cracked it.
 
-My instinct is that the answers will come from the same place the questions did — better tooling for the SDLC primitives we already understand. Better story handoffs. Better session summaries. Better ways to make the work log the source of truth. Not new paradigms. Deeper investment in the old ones.
+My guess is that the answers look a lot like the questions — better story handoffs, better session summaries, better ways to make the work log the source of truth. Not new paradigms. Deeper investment in the old ones. But I'm genuinely not sure.
 
 The kanban board is embarrassingly low-tech. That's the point.
