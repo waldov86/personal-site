@@ -37,11 +37,9 @@ Three Markdown files and an Obsidian plugin. Board with three columns, each card
 - [x] [[PRJ-008-deploy-pipeline|PRJ-008 Deploy pipeline refactor]]
 ```
 
-Each story file has a goal, context, acceptance criteria (hard gates and soft checks), an execution plan, a blocker field, and a work log. The hard gates are the definition of done — the story doesn't move until every one is checked. When something can't proceed, the card stays in Backlog marked `⚠️ BLOCKED`.
+Hard gates are the definition of done — the story doesn't move until every one is checked. When something can't proceed, the card stays in Backlog marked `⚠️ BLOCKED`.
 
-To start a session, I ask Claude to tackle the next story. Stories move to In Progress as the agent works — and come back to me when they need a decision or a human call. The board reflects who the ball is with.
-
-Nothing gets worked on without a story. Creating one takes two minutes. It means Claude can pick up context in a new session without me re-explaining everything.
+I ask Claude to tackle the next story. Stories move to In Progress as the agent works — and come back to me when they need a human call. Nothing gets worked on without a story.
 
 ---
 
