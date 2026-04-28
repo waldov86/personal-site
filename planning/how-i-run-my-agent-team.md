@@ -59,9 +59,9 @@ The acceptance criteria are the key piece. Not a spec — a definition of done. 
 
 The blocker field is load-bearing. When a story can't proceed, the card stays in Backlog with `⚠️ BLOCKED` appended to its title. The blocker field records what's wrong and what would resolve it. The agent doesn't silently skip or abandon — it marks, explains, and stops.
 
-**Pickup command** (`/cvr-next-story`) — a Claude Code skill that reads the board, picks the top Backlog card, reads the story file, and executes end-to-end. Before picking the next story, it checks whether something is stranded in In Progress. If it finds a card there with status DONE in the story file, it closes it out and continues. If it finds one still IN PROGRESS, it surfaces three options: resume, mark blocked, or abort. The board can't lie to you if the skill is the only thing that moves cards.
+To start a session, I ask Claude to tackle the next story. That's it. It reads the board, picks the top card, reads the story file, and we go. Before picking up something new, it checks whether anything is stranded in In Progress — closes it out if it's done, surfaces the options if it isn't. The board can't lie if Claude is the only thing that moves cards.
 
-After execution, the skill enforces a context update step before marking Done. The story file has a checklist of docs to update — `CLAUDE.md`, `docs/scripts.md`, whatever's relevant. Zero checked boxes is not valid. The skill won't mark Done without at least one checkbox checked or a one-sentence explanation of why nothing was worth capturing. Durable learnings don't survive on vibes.
+Before marking a story Done, there's a context update step. The story file has a checklist of docs to update — `CLAUDE.md`, `docs/scripts.md`, whatever's relevant. Zero checked boxes is not valid. Durable learnings don't survive on vibes.
 
 The rule is simple: nothing gets worked on without a story. Stakeholder requests, ideas, things I notice in passing — Backlog first. The agent doesn't get to pick what's next based on what's most interesting.
 
