@@ -6,19 +6,19 @@ tags: ["ai", "agents", "workflow", "claude-code", "engineering"]
 hasMermaid: false
 ---
 
-I run Scrum with my AI agents. Backlog grooming, story files, acceptance criteria, a pickup command that acts as the sprint. No estimation debates. No pushback on the process.
+I run Scrum with my AI agents. Zero complaints about estimation.
 
-The most useful thing I've done for my agent setup wasn't a new model or a better prompt. It was adding a kanban board.
+That's a joke. It's also the most accurate description of what I've built.
 
 ---
 
 ## The problem with just letting the agent run
 
-There's a lot of talk about agent orchestration — tool use, memory layers, multi-agent routing. Almost none about how you actually manage the work.
+The conversation around AI agents is almost entirely about orchestration — tool use, memory layers, multi-agent routing. Almost none of it is about managing the work.
 
-I had the same gap. I'd open a Claude Code session, pick something to build, and let the agent run. Sometimes it worked. Often it drifted. Context would bleed between sessions. I'd come back three days later and have no idea what state things were in or why something had been built the way it was.
+I had the same gap. I'd open a Claude Code session, pick something to build, and let the agent run. Sometimes it worked. Often it drifted. Context would bleed between sessions. I'd come back three days later with no idea what state things were in or why something had been built the way it was.
 
-The problem wasn't the agent. It was that I'd stripped away every management structure from the workflow and wondered why nothing felt organized.
+The problem wasn't the agent. It was that I'd stripped away every management structure from the workflow and expected nothing to change.
 
 ---
 
@@ -105,7 +105,7 @@ The direction that actually works: agents operating *within* an engineering syst
 
 My skills are Markdown files in `~/.claude/commands/`. The `/refinement-team-deep` skill is 142 lines. It runs six sequential analytical passes, enforces output formats for each, and requires the final planner to address every objection or explicitly justify ignoring it. None of that is intelligence. It's structure. The model provides the intelligence; the file provides the discipline. The role label is irrelevant — the instruction set is what creates the behaviour.
 
-What's different from the human team equivalent: the cost of process is near zero. Adding a `/critique` call before a decision doesn't require a calendar invite. Running a design review doesn't require a headcount. The friction that makes SDLC feel heavy in human teams mostly disappears. The patterns survive the transition, shedding the overhead.
+What's different: the cost of process is near zero. A `/critique` call doesn't require a calendar invite. A design review doesn't require a headcount. The friction that makes SDLC feel heavy in human teams mostly disappears. The patterns survive. The overhead doesn't.
 
 ---
 
@@ -123,6 +123,6 @@ It's still slow. It's still the only thing that works consistently.
 
 At AI Bar Camp Berlin last week, [every room circled back to the same problem](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/): shared context, shared process, legibility across sessions and people. Nobody has cracked it.
 
-What I have is a team that ships. No estimation debates. No one calling the tickets too vague. Just a backlog, a pickup command, and work that gets done.
+What I have is a team that ships. Consistently, if not elegantly.
 
-The kanban board is embarrassingly low-tech. It's also the most important thing in the setup.
+The kanban board is embarrassingly low-tech. That's the point. Process works because it's boring, not despite it.
