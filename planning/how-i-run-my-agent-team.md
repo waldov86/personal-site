@@ -6,9 +6,9 @@ tags: ["ai", "agents", "workflow", "claude-code", "engineering"]
 hasMermaid: false
 ---
 
-I run Scrum with my AI agents. Zero complaints about estimation.
+The most useful thing I've done for my agent setup wasn't a new model or a better prompt.
 
-That's a joke. It's also the most accurate description of what I've built.
+It was adding a kanban board.
 
 ---
 
