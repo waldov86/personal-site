@@ -6,7 +6,7 @@ tags: ["ai", "agents", "workflow", "claude-code", "engineering"]
 hasMermaid: false
 ---
 
-I run Scrum with my AI agents. Backlog grooming, story files, acceptance criteria, a pickup command that acts as the sprint. No estimation complaints. No pushback on the process. No passive-aggressive Slack messages about ticket quality.
+I run Scrum with my AI agents. Backlog grooming, story files, acceptance criteria, a pickup command that acts as the sprint. No estimation debates. No pushback on the process.
 
 The most useful thing I've done for my agent setup wasn't a new model or a better prompt. It was adding a kanban board.
 
