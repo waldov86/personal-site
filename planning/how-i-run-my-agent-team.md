@@ -91,9 +91,15 @@ The thing that strikes me most about this setup is how familiar it feels. Backlo
 
 That's the bet I'm making: the patterns from SDLC transfer, and the closer we follow them, the better agent-driven development gets. The overhead disappears. The discipline doesn't.
 
-The open problems are real though. Context doesn't fully survive session boundaries — I've patched this with memory files and a weekly review skill that synthesises how my way of working is evolving across coaching, tooling, and product work. It gives each new session a basis to iterate from rather than starting cold. Decision rationale still evaporates from transcripts. Shared context across sessions and collaborators is still unsolved. [At AI Bar Camp Berlin last week, every room circled back to the same questions](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/). Nobody has cracked it.
+The next SDLC primitive I'm working on is the retro. Two experiments, both still rough:
 
-I'm currently experimenting with a retro skill — something that periodically analyses patterns across sessions: which skills I reach for, which tasks get repeated or abandoned, where the gaps are. The equivalent of a sprint retro, but for the agent workflow itself. Not ready to share yet, but it's the direction that feels most promising.
+A **weekly review skill** that synthesises how my way of working is evolving — across coaching, tooling, and product work — and gives each new session a basis to iterate from rather than starting cold.
+
+An **agent retro skill** that periodically analyses patterns across sessions: which skills I reach for most, which tasks get repeated or abandoned, where the gaps are. The sprint retro equivalent, but for the workflow itself.
+
+Neither is ready to share. But the direction feels right.
+
+The open problems remain. Context doesn't fully survive session boundaries. Decision rationale evaporates from transcripts. Shared context across sessions and collaborators is unsolved. [At AI Bar Camp Berlin last week, every room circled back to the same questions](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/). Nobody has cracked it.
 
 My guess is that the answers look a lot like the questions — better story handoffs, better session summaries, better ways to make the work log the source of truth. Not new paradigms. Deeper investment in the old ones. But I'm genuinely not sure.
 
