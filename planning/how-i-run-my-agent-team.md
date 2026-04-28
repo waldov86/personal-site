@@ -1,6 +1,6 @@
 ---
-title: "Scrum for AI agents. Zero complaints about estimation."
-description: "The thing missing from most agent setups isn't model quality or tool use. It's project management. Old patterns, new actors — and finally a team that doesn't hate the tickets."
+title: "The future of AI agents looks a lot like 2010."
+description: "The thing missing from most agent setups isn't model quality or tool use. It's project management. Old patterns, new actors."
 pubDate: 2026-04-28
 tags: ["ai", "agents", "workflow", "claude-code", "engineering"]
 hasMermaid: false
