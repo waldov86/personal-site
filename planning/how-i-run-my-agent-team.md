@@ -55,9 +55,13 @@ Context update checklist — what docs to update after
 Work log — timestamped entries per session
 ```
 
-Hard gates are the definition of done — the story doesn't move until every one is checked. When something can't proceed, the card stays in Backlog marked `⚠️ BLOCKED`.
+Hard gates are the definition of done — the story doesn't move until every one is checked. When something can't proceed, the card stays in Backlog marked `⚠️ BLOCKED`. The agent doesn't silently skip or abandon — it marks, explains, and stops.
 
-I ask Claude to tackle the next story. Stories move to In Progress as the agent works — and come back to me when they need a human call. Nothing gets worked on without a story.
+I ask Claude to tackle the next story. Stories move to In Progress as the agent works — and come back to me when they need a human call. The board can't lie if Claude is the only thing that moves cards.
+
+Before marking a story Done, there's a context update step. The work log and the project's `CLAUDE.md` are the place to capture what was decided and why — not just what was built. Zero checked boxes is not valid. Durable learnings don't survive on vibes.
+
+Nothing gets worked on without a story.
 
 ---
 
