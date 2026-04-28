@@ -67,25 +67,21 @@ Nothing gets worked on without a story.
 
 ## The team
 
-The team is also a skill — a Markdown file that defines roles, when to call them, and what each one is looking for. Not a flat list of tools. Named roles with specific jobs, called at specific points in the process.
+The team is a Markdown file. Named roles, called at specific points in the process.
 
-The most useful one is [`/refinement-team-deep`](/skills/refinement-team-deep.md) — the planning council. Before any significant piece of work starts, I run the plan through six sequential agents — Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesises all five into a stronger output. Each agent addresses a flaw the previous one didn't. The Revised Planner can't ignore objections — it has to address each numbered finding or explicitly state why it's acceptable to leave it unresolved.
+The most useful one is [`/refinement-team-deep`](/skills/refinement-team-deep.md) — the planning council. Six sequential agents: Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesises all five. Each addresses a flaw the previous one didn't.
 
-Concrete example: I was redesigning a campaign analysis pipeline — splitting it into two phases, one that classifies performance patterns, one that writes the actual analysis text. Before writing a line of code, I ran the plan through the council. The Contrarian flagged that shipping both phases together would make it impossible to isolate regressions if something broke. The Architect added that the phase boundary was wrong — the two parts were coupled in a way that would make the second phase significantly harder to execute.
+Concrete example: I was redesigning a campaign analysis pipeline. The council flagged that shipping the new classification layer and the rendering change together would make it impossible to isolate regressions. The revised plan split them into separate stories — ship the classifier first in shadow mode, verify it on known cases, only then open the rendering work.
 
-The revised plan came back with a shadow mode gate: ship the classifier first, log its results without touching any visible output, verify it fires correctly on known cases, only then open the rendering story. A clear, testable definition of done that didn't require trusting the new logic was right — just that it was isolated.
+Two minutes of latency. The output was two new stories instead of one, with clearer hard gates on each.
 
-The council costs about two minutes. It's saved me from bad architecture more than once.
+**Orchestrator** — reads the board, routes work, breaks epics into stories. Default mode.
 
-The rest of the team follows the same pattern — a Markdown file, a defined lens, called at the right moment:
+**Tech Lead** — called before anything architectural ships.
 
-**Orchestrator (Claude as PM)** — reads the board, routes work, breaks epics into stories. Default mode.
+**Designer** — `/ux-review` before writing a line of markup.
 
-**Tech Lead** — called before anything architectural ships. Reviews implementation for what will break in practice, not just what looks correct in theory.
-
-**Designer** — I run `/ux-review` before writing a line of markup. Design review happens *before* implementation, not after.
-
-**Critic** — `/critique` for a fast single pass when the planning council would be overkill. Returns a verdict (PROCEED / REVISE / ABORT) in under a minute.
+**Critic** — `/critique` for a fast single pass. Returns PROCEED / REVISE / ABORT in under a minute.
 
 ---
 
