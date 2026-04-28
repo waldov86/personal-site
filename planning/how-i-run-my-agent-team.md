@@ -26,7 +26,7 @@ The problem wasn't the agent. It was that I'd stripped away every management str
 
 Three Markdown files and an Obsidian plugin.
 
-**Board file** (`kanban-cvr-analyzer.md`) — the Obsidian Kanban plugin renders this as a board. Three columns: `Backlog`, `In Progress`, `Done`. Each card is a wikilink to a story file. Nothing else.
+**Board file** — the Obsidian Kanban plugin renders this as a board. Three columns: `Backlog`, `In Progress`, `Done`. Each card is a wikilink to a story file. Nothing else.
 
 ```markdown
 ## Backlog
