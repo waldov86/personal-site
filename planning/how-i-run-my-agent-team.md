@@ -71,7 +71,7 @@ This sounds bureaucratic. It isn't. Creating a story file takes two minutes. Hav
 
 ## The team
 
-Not a flat list of tools. Named roles with specific jobs, called at specific points in the process.
+The team is also a skill — a Markdown file that defines roles, when to call them, and what each one is looking for. Not a flat list of tools. Named roles with specific jobs, called at specific points in the process.
 
 **Orchestrator (Claude as PM)** — reads the board, routes work, breaks epics into stories. Default mode.
 
