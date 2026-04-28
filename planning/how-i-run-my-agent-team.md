@@ -85,22 +85,6 @@ Two minutes of latency. The output was two new stories instead of one, with clea
 
 ---
 
-## What died
-
-Prompt engineering as team design.
-
-Most multi-agent frameworks from 2024 treated "agent teams" as a collection of system prompts — give each agent a persona and a role description and watch them collaborate. I tried this. It felt clever for about a week.
-
-The problem: everything lived in the prompt. The team's knowledge, its conventions, its history — all of it reset every session. You weren't building a team. You were re-instantiating one from scratch every time you opened a terminal.
-
-The direction that actually works: agents operating *within* an engineering system — version-controlled context, persistent state, defined process. The agent doesn't need to know it's a "Senior Tech Lead". It needs to receive the right context, in the right format, at the right time.
-
-My skills are Markdown files in `~/.claude/commands/`. The `/refinement-team-deep` skill is 142 lines. It runs six sequential analytical passes, enforces output formats for each, and requires the final planner to address every objection or explicitly justify ignoring it. None of that is intelligence. It's structure. The model provides the intelligence; the file provides the discipline. The role label is irrelevant — the instruction set is what creates the behaviour.
-
-What's different: the cost of process is near zero. A `/critique` call doesn't require a calendar invite. A design review doesn't require a headcount. The friction that makes SDLC feel heavy in human teams mostly disappears. The patterns survive. The overhead doesn't.
-
----
-
 ## The open problem
 
 Context doesn't fully survive session boundaries. I've patched this with persistent memory files and a weekly review skill that rebuilds state. It works. It's not elegant.
