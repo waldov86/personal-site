@@ -25,7 +25,7 @@ To set the stage, I borrowed a framework from [Nate B. Jones](https://natesnewsl
 
 **L5 — Dark Factory.** Fully autonomous. You write specs and maintain verification systems. Everything else is the agent's job.
 
-Most practitioners I know are somewhere between L2 and L3. A few are pushing toward L4. L5 is still mostly theoretical.
+Most practitioners are somewhere between L2 and L3. A few are pushing into L4. L5 is still mostly theoretical.
 
 The core insight is this: **getting past L3 isn't a tooling problem — it's a systems problem.** The bottleneck shifts from *how fast can I build this?* to *how well can I specify what I want, and how do I know it's actually done?*
 
@@ -61,7 +61,7 @@ Three things are broken that used to just be inconvenient:
 
 ## The L4 mirage
 
-During my research for this talk I met someone building at L4 — agents in production, a memory layer, self-optimising prompts. Genuinely impressive. But when I looked closely, there was a pattern that concerned me.
+Consulting with the Faust AI team while preparing this talk, I saw something building at L4 — agents in production, a memory layer, self-optimising prompts. Genuinely impressive. But when I looked closely, there was a pattern that concerned me.
 
 Only one engineer understood the full system. There was no closed feedback loop with humans outside that engineer. Remove that person and everything stops — because *the engineer IS the harness.*
 
@@ -71,23 +71,23 @@ Real L4 needs to be legible to someone other than its author. That's the part no
 
 ---
 
-## What the room taught me
+## The same problem, in every room
 
-I facilitated discussion after my talk, and the recurring theme across every conversation was the same:
+My session was in the morning. I spent the rest of the day walking into other rooms — agent orchestration, knowledge management, team velocity, tooling — and the same challenge kept surfacing. Different framing, different industry, different stack. Same underlying thing.
 
 **It's all about shared context, shared knowledge, shared data.**
 
 Some people think the answer is git-based — every piece of context lives in version-controlled files that agents and humans read from the same place. Others believe in vertical context managers — humans (often PMs, actually) who own the canonical understanding of a domain and promote it as best practice.
 
-One framing I found striking: *product managers are becoming context managers.* The job isn't just defining what to build — it's maintaining the shared truth that agents can act on. The question is whether that truth is a single evolving document (Karpathy-style), or a constellation of files in disparate places that together constitute reality.
+One framing that kept coming up: *product managers are becoming context managers.* The job isn't just defining what to build — it's maintaining the shared truth that agents can act on. The question is whether that truth is a single evolving document (Karpathy-style), or a constellation of files in disparate places that together constitute reality.
 
-We haven't figured that out.
+Nobody had a clean answer.
 
-What the room agreed on:
+What did feel settled across the rooms:
 
 - Claude is the dominant tool (the echo was loud and unprompted)
 - We're re-inventing SDLC patterns for agents — kanban boards, tech lead roles, design reviews — because the old patterns still make sense, even if the actors have changed
-- Prompt-engineering-based team setups (I looked at one called Kai) feel like 2024 thinking; the direction is toward agents operating within proper engineering systems, not instructions masquerading as architecture
+- Prompt-engineering-based team setups feel like 2024 thinking; the direction is toward agents operating within proper engineering systems, not instructions masquerading as architecture
 - **Decisions are the bottleneck.** Not code generation, not infrastructure. The rate at which humans make good decisions is now the limiting factor.
 
 ---
