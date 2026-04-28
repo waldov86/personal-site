@@ -73,23 +73,23 @@ This sounds bureaucratic. It isn't. Creating a story file takes two minutes. Hav
 
 The team is also a skill — a Markdown file that defines roles, when to call them, and what each one is looking for. Not a flat list of tools. Named roles with specific jobs, called at specific points in the process.
 
-**Orchestrator (Claude as PM)** — reads the board, routes work, breaks epics into stories. Default mode.
-
-**Tech Lead** — called before anything architectural ships. Reviews implementation for what will break in practice, not just what looks correct in theory. This is a skill invocation, not a separate agent — same model, different instruction set, different analytical lens.
-
-**Designer** — called before any UI work starts. I run `/ux-review` before writing a line of markup — it audits against accessibility rules, component conventions, layout patterns, and catches the things that are cheap to fix before implementation and expensive after. The discipline is: design review happens *before* implementation, not after.
-
-**Critic / Contrarian** — adversarial review on significant decisions. Two tiers: `/critique` for a fast single pass — it finds fatal flaws, forces you to quote the specific claim it's attacking, and returns a verdict (PROCEED / REVISE / ABORT) in under a minute. Then `/refinement-team-deep` for a full planning council when the stakes are higher.
-
-The planning council is the most useful thing I've built. It runs a plan through six sequential agents — Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesises all five into a stronger output. Each agent addresses a flaw the previous one didn't. The Revised Planner can't ignore objections — it has to address each numbered finding or explicitly state why it's acceptable to leave it unresolved.
+The most useful one is the [planning council](/skills/refinement-team-deep.md). Before any significant piece of work starts, I run the plan through six sequential agents — Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesises all five into a stronger output. Each agent addresses a flaw the previous one didn't. The Revised Planner can't ignore objections — it has to address each numbered finding or explicitly state why it's acceptable to leave it unresolved.
 
 Concrete example: I was redesigning a campaign analysis pipeline — splitting it into two phases, one that classifies performance patterns, one that writes the actual analysis text. Before writing a line of code, I ran the plan through the council. The Contrarian flagged that shipping both phases together would make it impossible to isolate regressions if something broke. The Architect added that the phase boundary was wrong — the two parts were coupled in a way that would make the second phase significantly harder to execute.
 
-The revised plan came back with a shadow mode gate: ship the classifier first, log its results per campaign without touching any visible output, verify it fires correctly on known cases, only then open the rendering story. The shadow mode approach also meant I could write precise hard gates — pipeline runs clean, no regressions, existing output unchanged. A clear, testable definition of done that didn't require trusting the new logic was right — just that it was isolated.
+The revised plan came back with a shadow mode gate: ship the classifier first, log its results without touching any visible output, verify it fires correctly on known cases, only then open the rendering story. A clear, testable definition of done that didn't require trusting the new logic was right — just that it was isolated.
 
-The council costs about two minutes of latency. It's saved me from bad architecture more than once.
+The council costs about two minutes. It's saved me from bad architecture more than once.
 
-The skill file is [here](/skills/refinement-team-deep.md) — drop it into `~/.claude/commands/` and call it with `/refinement-team-deep [plan text or file path]`.
+The rest of the team follows the same pattern — a Markdown file, a defined lens, called at the right moment:
+
+**Orchestrator (Claude as PM)** — reads the board, routes work, breaks epics into stories. Default mode.
+
+**Tech Lead** — called before anything architectural ships. Reviews implementation for what will break in practice, not just what looks correct in theory.
+
+**Designer** — I run `/ux-review` before writing a line of markup. Design review happens *before* implementation, not after.
+
+**Critic** — `/critique` for a fast single pass when the planning council would be overkill. Returns a verdict (PROCEED / REVISE / ABORT) in under a minute.
 
 ---
 
