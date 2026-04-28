@@ -111,7 +111,7 @@ What's different from the human team equivalent: the cost of process is near zer
 
 ## The open problem
 
-Context doesn't fully survive session boundaries. I've patched this with persistent memory files and a weekly review skill — it synthesises meeting recordings, Slack threads, and previous session notes back into a structured coaching summary each week, so the next session starts with a full picture rather than having to reconstruct everything from scratch. It works. It's not elegant.
+Context doesn't fully survive session boundaries. I've patched this with persistent memory files and a weekly review skill that rebuilds state. It works. It's not elegant.
 
 The deeper issue: the agent and I make architectural decisions together in a session, and the record of that reasoning mostly lives in the conversation transcript. If the session ends without a summary, the decision is orphaned from its rationale. Three weeks later, when a story touches the same area, there's no way to recover *why* the earlier decision was made — only what it was.
 
