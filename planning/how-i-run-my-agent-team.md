@@ -85,20 +85,14 @@ Two minutes of latency. The output was two new stories instead of one, with clea
 
 ---
 
-## The open problem
+## Where this is going
 
-Context doesn't fully survive session boundaries. I've patched this with persistent memory files and a weekly review skill that rebuilds state. It works. It's not elegant.
+The thing that strikes me most about this setup is how familiar it feels. Backlog, stories, acceptance criteria, roles, reviews. We've been doing this for thirty years. AI agents didn't invent a new way of working — they just gave us a new team to manage.
 
-The deeper issue: the agent and I make architectural decisions together in a session, and the record of that reasoning mostly lives in the conversation transcript. If the session ends without a summary, the decision is orphaned from its rationale. Three weeks later, when a story touches the same area, there's no way to recover *why* the earlier decision was made — only what it was.
+That's the bet I'm making: the patterns from SDLC transfer, and the closer we follow them, the better agent-driven development gets. The overhead disappears. The discipline doesn't.
 
-I've built two partial mitigations. The first is the context update checklist in each story file — before any story moves to Done, the agent has to check off which docs it updated, or justify why it didn't. This forces decision rationale into the relevant docs before the session closes. The second is `CLAUDE.md` as a standing instructions file: not a README, not code comments, but a file the agent reads at the start of every session containing decisions that can't be inferred from the code. One-sentence entries. That's the kind of thing that evaporates from transcripts.
+The open problems are real though. Context doesn't fully survive session boundaries — I've patched this with memory files and a weekly review skill that rebuilds state, but it's not elegant. Decision rationale evaporates from transcripts. Shared context across sessions and collaborators is still unsolved. [At AI Bar Camp Berlin last week, every room circled back to the same questions](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/). Nobody has cracked it.
 
-It's still slow. It's still the only thing that works consistently.
+My instinct is that the answers will come from the same place the questions did — better tooling for the SDLC primitives we already understand. Better story handoffs. Better session summaries. Better ways to make the work log the source of truth. Not new paradigms. Deeper investment in the old ones.
 
----
-
-At AI Bar Camp Berlin last week, [every room circled back to the same problem](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/): shared context, shared process, legibility across sessions and people. Nobody has cracked it.
-
-What I have is a team that ships. Consistently, if not elegantly.
-
-The kanban board is embarrassingly low-tech. That's the point. Process works because it's boring, not despite it.
+The kanban board is embarrassingly low-tech. That's the point.
