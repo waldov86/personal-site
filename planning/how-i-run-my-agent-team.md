@@ -59,7 +59,7 @@ The acceptance criteria are the key piece. Not a spec — a definition of done. 
 
 The blocker field is load-bearing. When a story can't proceed, the card stays in Backlog with `⚠️ BLOCKED` appended to its title. The blocker field records what's wrong and what would resolve it. The agent doesn't silently skip or abandon — it marks, explains, and stops.
 
-To start a session, I ask Claude to tackle the next story. That's it. It reads the board, picks the top card, reads the story file, and we go. Before picking up something new, it checks whether anything is stranded in In Progress — closes it out if it's done, surfaces the options if it isn't. The board can't lie if Claude is the only thing that moves cards.
+To start a session, I ask Claude to tackle the next story. That's it. It reads the board, picks the top card, reads the story file, and we go. Stories move to In Progress as the agent works through them — and get assigned back to me when they need a decision, a credential, or a human call. The board reflects who the ball is with. Before picking up something new, Claude checks whether anything is stranded in In Progress — closes it out if it's done, surfaces the options if it isn't. The board can't lie if Claude is the only thing that moves cards.
 
 Before marking a story Done, there's a context update step. The story file has a checklist of docs to update — `CLAUDE.md`, `docs/scripts.md`, whatever's relevant. Zero checked boxes is not valid. Durable learnings don't survive on vibes.
 
