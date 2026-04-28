@@ -24,9 +24,7 @@ The problem wasn't the agent. It was that I'd stripped away every management str
 
 ## The kanban board
 
-Here's the actual setup. It's three Markdown files and an Obsidian plugin.
-
-**Board file** (`kanban-cvr-analyzer.md`) — the Obsidian Kanban plugin renders this as a board. Three columns: `Backlog`, `In Progress`, `Done`. Each card is a wikilink to a story file. Nothing else.
+Three Markdown files and an Obsidian plugin. Board with three columns, each card a wikilink to a story file.
 
 ```markdown
 ## Backlog
@@ -39,33 +37,11 @@ Here's the actual setup. It's three Markdown files and an Obsidian plugin.
 - [x] [[PRJ-008-deploy-pipeline|PRJ-008 Deploy pipeline refactor]]
 ```
 
-**Story files** (`CVR-NNN-slug.md`) — one per card. Here's the actual schema:
+Each story file has a goal, context, acceptance criteria (hard gates and soft checks), an execution plan, a blocker field, and a work log. The hard gates are the definition of done — the story doesn't move until every one is checked. When something can't proceed, the card stays in Backlog marked `⚠️ BLOCKED`.
 
-```
-Status / Type / Priority / Scope / Created / Started / Completed
-Goal — one sentence
-Context — why this exists, what problem it solves
-Acceptance Criteria
-  Hard gates: binary pass/fail conditions
-  Soft checks: expected-true flags, worth noting if not
-Pipeline phases — which steps are in scope
-Execution plan
-Blocker — type / description / unblock condition
-Context update checklist — what docs to update after
-Work log — timestamped entries per session
-```
+To start a session, I ask Claude to tackle the next story. Stories move to In Progress as the agent works — and come back to me when they need a decision or a human call. The board reflects who the ball is with.
 
-The acceptance criteria are the key piece. Not a spec — a definition of done. Hard gates are binary: the story doesn't move to Done unless every one is checked. Soft checks are flags: true in normal circumstances, worth noting when not. The agent knows it's done when all hard gates are checkable.
-
-The blocker field is load-bearing. When a story can't proceed, the card stays in Backlog with `⚠️ BLOCKED` appended to its title. The blocker field records what's wrong and what would resolve it. The agent doesn't silently skip or abandon — it marks, explains, and stops.
-
-To start a session, I ask Claude to tackle the next story. That's it. It reads the board, picks the top card, reads the story file, and we go. Stories move to In Progress as the agent works through them — and get assigned back to me when they need a decision, a credential, or a human call. The board reflects who the ball is with. Before picking up something new, Claude checks whether anything is stranded in In Progress — closes it out if it's done, surfaces the options if it isn't. The board can't lie if Claude is the only thing that moves cards.
-
-Before marking a story Done, there's a context update step. The story file has a checklist of docs to update — `CLAUDE.md`, `docs/scripts.md`, whatever's relevant. Zero checked boxes is not valid. Durable learnings don't survive on vibes.
-
-The rule is simple: nothing gets worked on without a story. Stakeholder requests, ideas, things I notice in passing — Backlog first. The agent doesn't get to pick what's next based on what's most interesting.
-
-This sounds bureaucratic. It isn't. Creating a story file takes two minutes. Having it means the agent can pick up context in a new session without me re-explaining everything.
+Nothing gets worked on without a story. Creating one takes two minutes. It means Claude can pick up context in a new session without me re-explaining everything.
 
 ---
 
