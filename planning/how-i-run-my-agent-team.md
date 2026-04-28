@@ -36,7 +36,7 @@ Here's the actual setup. It's three Markdown files and an Obsidian plugin.
 ## In Progress
 
 ## Done
-- [x] [[CVR-014-hackathon-tooling|CVR-014 Adopt hackathon winner tooling]]
+- [x] [[PRJ-008-deploy-pipeline|PRJ-008 Deploy pipeline refactor]]
 ```
 
 **Story files** (`CVR-NNN-slug.md`) — one per card. Here's the actual schema:
