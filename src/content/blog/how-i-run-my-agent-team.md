@@ -39,11 +39,29 @@ Here's the actual setup. It's three Markdown files and an Obsidian plugin.
 - [x] [[CVR-014-hackathon-tooling|CVR-014 Adopt hackathon winner tooling]]
 ```
 
-**Story files** (`CVR-NNN-slug.md`) — one per card. The format: status, type, goal, context, acceptance criteria (hard gates and soft checks), execution plan, blocker field, work log. The story file is the source of truth. The board is derived.
+**Story files** (`CVR-NNN-slug.md`) — one per card. Here's the actual schema:
 
-The acceptance criteria are the key piece. Not a spec — a definition of done. Hard gates are binary: either this is true or the story doesn't move to Done. Soft checks are flags: true in normal circumstances, worth noting if not. The agent knows it's done when all hard gates are checkable.
+```
+Status / Type / Priority / Scope / Created / Started / Completed
+Goal — one sentence
+Context — why this exists, what problem it solves
+Acceptance Criteria
+  Hard gates: binary pass/fail conditions
+  Soft checks: expected-true flags, worth noting if not
+Pipeline phases — which pipeline steps are in scope
+Execution plan
+Blocker — type / description / unblock condition
+Context update checklist — what docs to update after
+Work log — timestamped entries per session
+```
 
-**Pickup command** (`/cvr-next-story`) — a Claude Code skill that reads the board, picks the top Backlog card, reads the story file, and executes end-to-end. It checks for stranded In Progress items first. It doesn't ask what to work on next. The board decides.
+The acceptance criteria are the key piece. Not a spec — a definition of done. Hard gates are binary: the story doesn't move to Done unless every one is checked. Soft checks are flags: true in normal circumstances, worth noting when not. The agent knows it's done when all hard gates are checkable.
+
+The blocker field is load-bearing. When a story can't proceed, the card stays in Backlog with `⚠️ BLOCKED` appended to its title. The blocker field records what's wrong and what would resolve it. The agent doesn't silently skip or abandon — it marks, explains, and stops.
+
+**Pickup command** (`/cvr-next-story`) — a Claude Code skill that reads the board, picks the top Backlog card, reads the story file, and executes end-to-end. Before picking the next story, it checks whether something is stranded in In Progress. If it finds a card there with status DONE in the story file, it closes it out and continues. If it finds one still IN PROGRESS, it surfaces the three options: resume, mark blocked, or abort. The board can't lie to you if the skill is the only thing that moves cards.
+
+After execution, the skill enforces a context update step before marking Done. The story file has a checklist of docs to update — `CLAUDE.md`, `docs/scripts.md`, whatever's relevant. Zero checked boxes is not valid. The skill won't mark Done without at least one checkbox checked or a one-sentence explanation of why nothing was worth capturing. Durable learnings don't survive on vibes.
 
 The rule is simple: nothing gets worked on without a story. Stakeholder requests, ideas, things I notice in passing — Backlog first. The agent doesn't get to pick what's next based on what's most interesting.
 
@@ -63,7 +81,13 @@ Not a flat list of tools. Named roles with specific jobs, called at specific poi
 
 **Critic / Contrarian** — adversarial review on significant decisions. Two tiers: `/critique` for fast single-pass (fatal flaws + verdict in under a minute), `/refinement-team-deep` for full planning council.
 
-The planning council is the most useful thing I've built. It runs a plan through six sequential agents — Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesizes all five into a stronger output. Each agent addresses a flaw the previous one didn't. The Revised Planner can't ignore objections — it has to address each numbered finding or explicitly state why it's acceptable to leave it unresolved.
+The planning council is the most useful thing I've built. It runs a plan through six sequential agents — Critic, Contrarian, Tech Lead, Software Architect, Engineering Manager, then a Revised Planner who synthesises all five into a stronger output. Each agent addresses a flaw the previous one didn't. The Revised Planner can't ignore objections — it has to address each numbered finding or explicitly state why it's acceptable to leave it unresolved.
+
+Concrete example: I was planning a v2 architecture for an analysis pipeline — reclassifying campaign performance via a new `CampaignVerdict` dataclass, Python handling classification, Bedrock handling rendering. Before writing a line of code, I ran the plan through the council. The Contrarian flagged that the plan shipped a new classification layer and a rendering change simultaneously, making it impossible to isolate regressions. The Architect added that the phase boundary was wrong — classification and rendering were coupled in a way that would make the next phase significantly harder to execute.
+
+The revised plan came back with a shadow mode gate: ship the classifier first, log verdicts per campaign without touching any analyst-visible output, run end-to-end on all 19 advertisers, verify the classifier fires correctly on known cases, only then open the rendering story. That became CVR-018. The shadow mode approach also meant I could write precise hard gates: pipeline runs clean, no regressions, `_render_recommendation` output unchanged. A clear, testable definition of done that didn't require trusting that the new logic was right — just that it was isolated.
+
+The council costs about two minutes of latency. It's saved me from bad architecture more than once.
 
 The skill file is [here](/skills/refinement-team-deep.md) — drop it into `~/.claude/commands/` and call it with `/refinement-team-deep [plan text or file path]`.
 
@@ -91,7 +115,7 @@ The problem: everything lived in the prompt. The team's knowledge, its conventio
 
 The direction that actually works: agents operating *within* an engineering system — version-controlled context, persistent state, defined process. The agent doesn't need to know it's a "Senior Tech Lead". It needs to receive the right context, in the right format, at the right time.
 
-My skills are Markdown files in `~/.claude/commands/`. They're readable to humans, diffable in git, and composable. The intelligence is in the structure, not the role label.
+My skills are Markdown files in `~/.claude/commands/`. The `/refinement-team-deep` skill is 142 lines. It runs six sequential analytical passes, enforces output formats for each, and requires the final planner to address every objection or explicitly justify ignoring it. None of that is intelligence. It's structure. The model provides the intelligence; the file provides the discipline. Readable to humans, diffable in git, composable with other skills. The role label is irrelevant — the instruction set is what creates the behaviour.
 
 ---
 
@@ -99,9 +123,11 @@ My skills are Markdown files in `~/.claude/commands/`. They're readable to human
 
 Context doesn't fully survive session boundaries. I've patched this with persistent memory files and a weekly review skill that rebuilds state. It works. It's not elegant.
 
-The deeper issue: the agent and I make architectural decisions together in a session, and the record of that reasoning mostly lives in the conversation transcript. If the session ends without a summary, the decision is orphaned from its rationale.
+The deeper issue: the agent and I make architectural decisions together in a session, and the record of that reasoning mostly lives in the conversation transcript. If the session ends without a summary, the decision is orphaned from its rationale. Three weeks later, when a story touches the same area, there's no way to recover *why* the earlier decision was made — only what it was.
 
-I haven't solved this. The best approach I've found: treat every significant decision as worth a one-sentence entry in the project's `CLAUDE.md`. Not the codebase — the standing instructions file the agent reads at the start of every session. It's slow. It's the only thing that works consistently.
+I've built two partial mitigations. The first is the context update checklist in each story file — before any story moves to Done, the agent has to check off which docs it updated, or justify why it didn't. This forces decision rationale into `docs/scripts.md`, `docs/kpi-definitions.md`, or the project `CLAUDE.md` before the session closes. The second is `CLAUDE.md` as a standing instructions file: not a README, not code comments, but a file the agent reads at the start of every session containing the decisions that can't be inferred from the code. One-sentence entries like "the CVR reliable threshold is ≥20 conversions L14D — this was validated against the full advertiser set in April 2026 and is not arbitrary." That's the kind of thing that evaporates from transcripts.
+
+It's still slow. It's still the only thing that works consistently. The goal is to make the standing instructions file the source of truth for anything a future-session agent would otherwise have to re-derive or re-ask.
 
 ---
 
