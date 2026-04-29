@@ -85,11 +85,7 @@ Two minutes of latency. The output was two new stories instead of one, with clea
 
 ---
 
-## Where this is going
-
-The thing that strikes me most about this setup is how familiar it feels. Backlog, stories, acceptance criteria, roles, reviews. We've been doing this for thirty years. AI agents didn't invent a new way of working — they just gave us a new team to manage.
-
-That's the bet I'm making: the patterns from SDLC transfer, and the closer we follow them, the better agent-driven development gets. The overhead disappears. The discipline doesn't.
+## Retrospective
 
 The next SDLC primitive I'm working on is the retro. Two experiments, both still rough:
 
@@ -97,6 +93,14 @@ The next SDLC primitive I'm working on is the retro. Two experiments, both still
 - An **agent retro skill** — pattern analysis across sessions: which skills I reach for, which tasks get repeated or abandoned, where the gaps are.
 
 Neither is ready to share. But the direction feels right.
+
+---
+
+## Where this is going
+
+The thing that strikes me most about this setup is how familiar it feels. Backlog, stories, acceptance criteria, roles, reviews. We've been doing this for thirty years. AI agents didn't invent a new way of working — they just gave us a new team to manage.
+
+That's the bet I'm making: the patterns from SDLC transfer, and the closer we follow them, the better agent-driven development gets. The overhead disappears. The discipline doesn't.
 
 The open problems remain. Context doesn't fully survive session boundaries. Decision rationale evaporates from transcripts. Shared context across sessions and collaborators is unsolved. [At AI Bar Camp Berlin last week, every room circled back to the same questions](https://waldo.vanderlore.de/blog/ai-camp-berlin-2026/). Nobody has cracked it.
 
