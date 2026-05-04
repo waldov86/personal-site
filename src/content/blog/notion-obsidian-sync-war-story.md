@@ -6,21 +6,15 @@ tags: ["notion", "obsidian", "automation", "node", "productivity"]
 hasMermaid: true
 ---
 
-I use Notion as my task manager. I use Obsidian as my local knowledge base. For a long time I managed the gap manually — copying tasks, updating statuses in both places, letting them drift.
+Notion is great. It's also exhausting. Every click goes through a server. The UI is busy. Opening it to check a task feels like loading a dashboard when all you wanted was a sticky note.
 
-Eventually I got tired of it and built a sync daemon. It took a few months to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds.
+What I actually want day-to-day is simpler: a folder of plain text files I can open instantly, search with `grep`, scroll through in a terminal, or hand to Claude Code as context. Obsidian gives me that. It's fast, local, and gets out of the way.
 
----
+But I can't ditch Notion entirely. Mobile access, quick capture on the go, sharing with others — for that it's still the right tool. I just don't want to *live* in it.
 
-## The problem
+So I built a sync daemon. Notion stays as the source of truth and the mobile cockpit. Obsidian becomes the local view: a folder of `.md` files, one per task, plus a kanban board that mirrors the Notion database. You can work in either place and they stay in sync.
 
-Notion is great as a cockpit. Rich views, mobile app, sharing with others. But every task lives on a server. When I want to work offline, search with `grep`, or have Claude Code read my task list for context, Notion is opaque.
-
-Obsidian is great as a local layer. Everything is plain text. It indexes instantly. You can build wikilinks, templates, kanban boards from files. But it has no mobile app worth using and no native connection to external databases.
-
-I wanted both. Notion as the source of truth, a local folder of `.md` files that stays in sync, and an Obsidian kanban board for a drag-and-drop view over the same data.
-
----
+It took a few months to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds.
 
 ## The architecture
 
