@@ -1,14 +1,16 @@
 ---
-title: "How I built a reliable Notion ↔ Obsidian sync (and nearly lost everything)"
-description: "A war story about building a two-way sync daemon between Notion and local Markdown files — what broke, why 28 tasks vanished in two seconds, and what it took to make it resilient."
+title: "My sync daemon wiped 28 tasks in two seconds. Then I understood what an agent harness is."
+description: "A war story about building a Notion ↔ Obsidian sync daemon, what broke catastrophically, and how the process of hardening it taught me what agent harness engineering actually means."
 pubDate: 2026-04-30
-tags: ["notion", "obsidian", "automation", "node", "productivity"]
+tags: ["notion", "obsidian", "automation", "node", "agents", "productivity"]
 hasMermaid: true
 ---
 
 I use Notion as my task manager. I use Obsidian as my local knowledge base. For a long time I managed the gap manually — copying tasks, updating statuses in both places, letting them drift.
 
-Eventually I got tired of it and built a sync daemon. It took a few months to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds. This is about what broke, why, and what I built afterward to prevent it from ever happening again.
+Eventually I got tired of it and built a sync daemon. It took a few months to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds.
+
+That incident didn't just teach me how to build a safer sync daemon. It gave me a concrete, visceral understanding of what an agent harness is — and why the harness matters more than the intelligence inside it.
 
 ---
 
@@ -61,11 +63,15 @@ Private notes. Only visible locally.
 
 State is stored in a JSON file — a map of Notion page IDs to local file paths, content hashes, and sync status. SHA-256 hashes of the synced fields let the daemon skip unnecessary pushes.
 
+It worked well for months. I stopped thinking of it as software I was building and started treating it as infrastructure I relied on.
+
+That was the mistake.
+
 ---
 
 ## What broke: the wipeout of April 30, 2026
 
-I had been running this for a few months without major issues. Then one morning I opened Obsidian and noticed the kanban board was empty. I checked the `todos/` folder — still had files. I checked Notion — 28 tasks were marked Done/Dropped. Some had been active for months.
+One morning I opened Obsidian and noticed the kanban board was empty. I checked the `todos/` folder — still had files. I checked Notion — 28 tasks were marked Done/Dropped. Some had been active for months.
 
 The root cause took about an hour to find.
 
@@ -79,80 +85,105 @@ There were three independent failures that had to all line up:
 
 1. **The kanban file was bidirectional**. It was both an output (written by the daemon) and an input (read by the daemon for status changes). Generated files should never be treated as inputs.
 2. **No blast-radius limit**. The daemon would happily apply a drop action to every single active task in one pass. There was no sanity check on scale.
-3. **No empty-file guard**. Parsing a file with zero active items was indistinguishable from "user deleted all tasks." It should have been treated as a corrupted state instead.
+3. **No empty-file guard**. Parsing a file with zero active items was indistinguishable from "user deleted all tasks." It should have been treated as corrupted state instead.
 
 ---
 
-## The fixes
+## This is what agents without harnesses do
 
-### 1. Make `kanban.md` output-only
+After recovering the tasks (state backup, bless), I read a piece by Decoding AI on [agentic harness engineering](https://open.substack.com/pub/decodingaimagazine/p/agentic-harness-engineering) that reframed the whole incident for me.
 
-The kanban board is now clearly marked as output-only:
+The article's definition hit hard:
+
+> *"Harness engineering is the practice of engineering a solution every time an agent makes a mistake, ensuring it never makes that specific mistake again."*
+
+My sync daemon is an agent. Not a glamorous LLM-powered one — just a Node.js process that observes its environment, makes decisions, and takes actions with real-world consequences. It reads files, compares state, calls an API, writes to disk. That's the loop.
+
+The diagram below is how I'd been thinking about AI agents — but looking at it after the wipeout, I realised it describes my daemon just as well.
+
+**Agent = Model (intelligence) + Harness (everything else)**
+
+The harness is the infrastructure that surrounds the decision-making logic: the tools it can use, the memory it draws on, the sandbox constraints, the orchestration layer, the circuit breakers. The model — whether that's a neural net or a deterministic state machine — is only as safe as its harness allows it to be.
+
+My daemon had a model (the sync logic) and zero harness. No bounds on what a single decision could affect. No memory about which files it generated vs. which files it should read. No sandbox preventing a corrupted input from triggering a write to every record in the database.
+
+The wipeout was inevitable. The only question was when.
+
+---
+
+## Building the harness
+
+Fixing the daemon meant building the harness it should have had from the start.
+
+### Guard 1: output files are not inputs
+
+The kanban board is a *projection* of state — like a materialized database view. Reading it back as authoritative input is the same as writing a trigger that fires when a view is refreshed.
+
+The fix was structural: the daemon now explicitly excludes `kanban.md` from the file watcher and tracks the output path in config to enforce this at multiple layers. The file is clearly marked:
 
 ```
-<!-- AUTO-GENERATED — do not edit. To change a task status, edit its status: field in the .md file -->
+<!-- AUTO-GENERATED — do not edit. -->
 ```
 
-Status changes still flow from the kanban board — but only from `.md` wikilink cards, never from the file's presence or absence on disk. The daemon reads the kanban only to detect drag-and-drop moves between columns, not to infer which tasks exist.
+Status changes still flow *through* the kanban board — but by reading individual wikilink cards, not by inferring task existence from the file. The source of truth for which tasks exist is the JSON state file, not the kanban.
 
-The "source of truth" for which tasks exist is the JSON state file, not the kanban.
+### Guard 2: the empty-kanban check
 
-### 2. The empty-kanban guard
-
-Before processing any status changes or drops from the kanban, the daemon checks:
+Before processing any drops from the kanban, the daemon now checks its own state against what the kanban claims:
 
 ```js
 if (kanbanFilenames.size === 0 && activeInState > 0) {
-  log.warn('SAFETY: kanban has 0 active items but state has active items — skipping sync to avoid wipeout', {
+  log.warn('SAFETY: kanban has 0 active items but state has active items — skipping sync', {
     activeInState,
   });
   return;
 }
 ```
 
-If the kanban appears empty but the state knows about active tasks, the whole sync pass is aborted. The next poll will either see a properly-rendered kanban or trigger the guard again until the issue resolves.
+If the kanban appears empty but the state knows about active tasks, the sync pass aborts. This is the harness saying: *the model's input looks wrong — refuse to act until it doesn't*.
 
-### 3. The catastrophic-drop guard
+### Guard 3: the catastrophic-drop limit
 
-Even if the kanban isn't empty, a large batch of drops in one pass is treated as suspicious:
+Even with a non-empty kanban, mass drops are treated as suspicious:
 
 ```js
 if (dropActions.length > 5 && dropActions.length > kanbanFilenames.size) {
   log.warn('SAFETY: catastrophic drop detected — aborting drop pass', {
     dropCount: dropActions.length,
     boardSize: kanbanFilenames.size,
-    activeInState,
   });
   dropActions.length = 0;
 }
 ```
 
-The threshold is: more than 5 drops *and* more than 50% of the active board in one pass. Status changes and new cards still go through — only the mass-drop is blocked. This preserves normal operation while stopping the worst-case scenario.
+More than 5 drops *and* more than 50% of the active board in one pass — abort. Status changes and new cards still process. Only the mass-drop is blocked. This is blast-radius limiting: the model can act, but only up to the point where the consequences become irreversible at scale.
 
-### 4. State backup and lockfile cleanup
+### Guard 4: memory and recovery
 
-Two smaller hardening changes:
+Two smaller changes that matter when things still go wrong:
 
-- **Rolling state backup**: every `saveState()` call copies the current state to `state.json.bak` before overwriting. Manual recovery is `cp state.json.bak state.json`.
-- **Stale lockfile cleanup**: if the process crashes without releasing the lockfile, the next startup checks the PID in the lockfile. If that process is no longer alive, the stale lock is cleared rather than blocking startup forever.
+- **Rolling state backup** — every write copies the current state to `state.json.bak` before overwriting. Recovery is `cp state.json.bak state.json` and a restart.
+- **Stale lockfile cleanup** — if the process crashes without releasing its lockfile, the next startup checks whether the PID is still alive before blocking. A dead PID means a stale lock: clear it and continue.
+
+These aren't prevention — they're recovery paths. A complete harness has both.
 
 ---
 
-## The architectural lesson
+## The pattern generalises
 
-The wipeout happened because I treated `kanban.md` as bidirectional when it was structurally unidirectional.
+The thing about harness engineering is that it's not really about the specific mistake. It's about a discipline: every time your agent does something wrong, you don't just fix the logic — you add a constraint that makes that class of mistake structurally impossible going forward.
 
-The kanban board is a *projection* of the state. It's like a materialized view in a database — computed from the source, not the source itself. Reading it as input is the same as writing a database trigger that fires when a view is refreshed.
+The mistake my daemon made was: treating a generated file as authoritative input. The harness fix was: the file watcher now has an explicit exclusion list and the kanban path is always on it. That constraint exists forever, regardless of what else changes in the code.
 
-There's a general pattern here: whenever you have a file that's auto-generated by a process, make it physically impossible for that same process to read it back as authoritative input. Put it in a different directory, give it a different naming convention, or add a header that makes its generated nature obvious — and then enforce that at the parsing layer.
+This is very different from patching the logic. Patching logic creates a new version that probably won't make the same mistake. Adding a harness constraint creates a system that *cannot* make that mistake, regardless of what the logic does.
 
-In this case, the fix was structural: the daemon now tracks which file is the kanban output path and explicitly excludes it from the file watcher.
+I've started applying this frame to every automated process I build. Not just "does the code look right?" but "what's the worst thing this agent could do unilaterally, and what harness constraint would make that impossible?"
 
 ---
 
 ## What it looks like now
 
-After the fixes, the daemon has been running cleanly for several weeks. Typical flow:
+The daemon has been running cleanly for several weeks. Typical flow:
 
 - I open Notion on my phone and change a task's status → within 5 minutes, the local `.md` file reflects the change and the kanban board is rebuilt
 - I edit a task body in Obsidian → within 500 ms, the change is pushed to Notion
@@ -160,12 +191,14 @@ After the fixes, the daemon has been running cleanly for several weeks. Typical 
 
 The safety guards have fired twice since deployment — both times because Obsidian's startup race replicated the original condition. Both times, the kanban showed zero items, the guard logged a `SAFETY:` warning, and the sync was suspended until the next poll when the kanban had rendered correctly.
 
+Two false alarms that didn't become two more wipeouts. That's the harness working.
+
 ---
 
 ## The code
 
 The daemon is open-source: [github.com/waldov86/notion-obsidian-sync](https://github.com/waldov86/notion-obsidian-sync)
 
-It's a Node.js script (~1,000 lines across 8 files), zero cloud dependencies, runs as a launchd agent on macOS or a systemd service on Linux. The README has setup instructions, a full configuration reference, and the Notion database schema you'll need.
+Node.js, ~1,000 lines across 8 files, zero cloud dependencies. Runs as a launchd agent on macOS or a systemd service on Linux. The README covers setup, configuration, and the Notion database schema.
 
-If you've been managing Notion and Obsidian separately and want them to stay in sync without a third-party tool, it might save you some time — or at least the two seconds it took me to lose 28 tasks.
+If you've built something like this — or you're building agents of any kind and wondering why the harness deserves as much attention as the model — the Decoding AI piece on [agentic harness engineering](https://open.substack.com/pub/decodingaimagazine/p/agentic-harness-engineering) is worth reading. It gave me the vocabulary for something I'd been learning the hard way.
