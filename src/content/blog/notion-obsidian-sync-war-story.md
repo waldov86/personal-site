@@ -87,19 +87,17 @@ Three things had to go wrong at once:
 
 ## The fixes
 
-### 1. Remove `kanban.md` from the file watcher
+### 1. Separate the file watcher from the poll
 
-The kanban is still an input — if you drag a card to a different column in Obsidian, the daemon picks that up on the next poll and syncs the status change to Notion. That's intentional and should keep working.
+`kanban.md` lives in the parent folder, not inside `todos/`, so it was never in the real-time chokidar watcher. The actual problem was a different kind of bidirectionality: the daemon was reading `kanban.md` to infer which tasks still existed, and any corrupted write — like the partially-initialized version Obsidian produced — would be treated as authoritative.
 
-The problem was that `kanban.md` was also in the **real-time file watcher**. Any write to the file — including the daemon's own rebuilds — would immediately re-trigger a sync pass. That's what turned the Obsidian startup race into a wipeout: the plugin rewrote the file, chokidar fired, and the daemon processed a corrupted kanban before Obsidian had finished rendering it.
-
-The fix: exclude `kanban.md` from chokidar entirely. It's now only read during the scheduled poll, not on every file change. The file is also clearly marked so it's obvious it gets rebuilt automatically:
+The fix has two parts. First, the source of truth for which tasks *exist* is now the JSON state file, not the kanban. The kanban is only read to detect column moves (status changes). Second, `kanban.md` is clearly marked so it's obvious it gets rebuilt automatically:
 
 ```
-<!-- AUTO-GENERATED — do not edit. -->
+<!-- AUTO-GENERATED — do not edit. To change a task status, edit its status: field in todos/<filename>.md -->
 ```
 
-The source of truth for which tasks *exist* is the JSON state file, not the kanban. The kanban is only used to detect column moves.
+Dragging a card between columns in Obsidian still syncs to Notion on the next poll — that bidirectional flow is intentional and working.
 
 ### 2. Empty-kanban guard
 
@@ -143,9 +141,12 @@ Two smaller ones:
 
 ## What it looks like now
 
-The daemon has been running cleanly for several weeks. The guards have fired twice — both times Obsidian's startup race replicated the original condition. Both times, the sync suspended itself, logged a `SAFETY:` warning, and recovered on the next poll.
+- Open Notion on your phone, change a task status → within 5 minutes the local `.md` file reflects it and the kanban is rebuilt
+- Edit a task body in Obsidian → within 500 ms the change is pushed to Notion
+- Drop a new `.md` file in the folder → a Notion page is created, the file gets its `notion_id` back
+- Drag a card to a different column in the Obsidian kanban → on the next poll the status syncs to Notion and the local file is updated
 
-Two near-misses that didn't turn into wipeouts.
+The safety guards have fired twice since the wipeout — both times Obsidian's startup race replicated the original condition. Both times the sync suspended itself, logged a `SAFETY:` warning, and recovered cleanly on the next poll.
 
 ---
 
