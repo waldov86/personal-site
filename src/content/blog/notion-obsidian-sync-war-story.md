@@ -8,7 +8,7 @@ hasMermaid: true
 
 I use Notion as my task manager. I use Obsidian as my local knowledge base. For a long time I managed the gap manually — copying tasks, updating statuses in both places, letting them drift.
 
-Eventually I got tired of it and built a sync daemon. It took a few weeks to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds.
+Eventually I got tired of it and built a sync daemon. It took a few months to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds.
 
 ---
 
@@ -87,17 +87,19 @@ Three things had to go wrong at once:
 
 ## The fixes
 
-### 1. `kanban.md` is output-only
+### 1. Remove `kanban.md` from the file watcher
 
-The kanban board is a projection of state — like a database view. Reading it back as an input is the same as writing a trigger that fires when a view is refreshed.
+The kanban is still an input — if you drag a card to a different column in Obsidian, the daemon picks that up on the next poll and syncs the status change to Notion. That's intentional and should keep working.
 
-The fix: the daemon now explicitly excludes `kanban.md` from the file watcher. The file is clearly marked:
+The problem was that `kanban.md` was also in the **real-time file watcher**. Any write to the file — including the daemon's own rebuilds — would immediately re-trigger a sync pass. That's what turned the Obsidian startup race into a wipeout: the plugin rewrote the file, chokidar fired, and the daemon processed a corrupted kanban before Obsidian had finished rendering it.
+
+The fix: exclude `kanban.md` from chokidar entirely. It's now only read during the scheduled poll, not on every file change. The file is also clearly marked so it's obvious it gets rebuilt automatically:
 
 ```
 <!-- AUTO-GENERATED — do not edit. -->
 ```
 
-Status changes still flow through the kanban — but by reading individual wikilink cards, not by inferring which tasks exist from the file as a whole. The source of truth for task existence is the JSON state file.
+The source of truth for which tasks *exist* is the JSON state file, not the kanban. The kanban is only used to detect column moves.
 
 ### 2. Empty-kanban guard
 
