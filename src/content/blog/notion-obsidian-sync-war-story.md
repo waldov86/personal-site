@@ -8,7 +8,7 @@ hasMermaid: true
 
 I use Notion as my task manager. I use Obsidian as my local knowledge base. For a long time I managed the gap manually — copying tasks, updating statuses in both places, letting them drift.
 
-Eventually I got tired of it and built a sync daemon. It took a few months to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds.
+Eventually I got tired of it and built a sync daemon. It took a few weeks to get right, and on April 30, 2026, it wiped 28 tasks in under two seconds.
 
 That incident didn't just teach me how to build a safer sync daemon. It gave me a concrete, visceral understanding of what an agent harness is — and why the harness matters more than the intelligence inside it.
 
