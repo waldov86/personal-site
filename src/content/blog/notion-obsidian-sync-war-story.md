@@ -145,6 +145,9 @@ Two smaller ones:
 - Edit a task body in Obsidian → within 500 ms the change is pushed to Notion
 - Drop a new `.md` file in the folder → a Notion page is created, the file gets its `notion_id` back
 - Drag a card to a different column in the Obsidian kanban → on the next poll the status syncs to Notion and the local file is updated
+- Click a card in the kanban → it opens the linked `.md` file; edit the title or body there and it pushes to Notion within 500 ms
+
+Each kanban card is a wikilink to its own `.md` file rather than a self-contained card. It mirrors how Notion works: the board is just a view, and the actual content lives in the page. You get drag-to-move for status changes and a full editor for everything else, without ever leaving Obsidian.
 
 The safety guards have fired twice since the wipeout — both times Obsidian's startup race replicated the original condition. Both times the sync suspended itself, logged a `SAFETY:` warning, and recovered cleanly on the next poll.
 
