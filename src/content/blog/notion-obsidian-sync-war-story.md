@@ -159,8 +159,22 @@ That's exactly what these guards are. Worth keeping in mind for any automated pr
 
 ---
 
+## One more thing: making it instant in both directions
+
+After publishing this post I noticed one remaining asymmetry. Local edits push to Notion within 500 ms. But Notion changes — editing a task on mobile, say — only arrive locally on the next 5-minute poll.
+
+The daemon has an HTTP trigger endpoint (`POST /trigger-poll`) for exactly this case. Send it a request and it runs an immediate poll instead of waiting for the interval. I'd wired up a Cloudflare Tunnel to expose it and built an n8n workflow to call it whenever Notion fires a change event — but left the workflow inactive and never tested it.
+
+When I finally went to turn it on, I found the workflow had been built with a `responseMode: "immediately"` setting that n8n doesn't support. That's why it was returning 404 — it wasn't inactive, it was misconfigured. One field change, a workflow activation, and the chain was live.
+
+I also added a concurrency guard before turning it on. The daemon's `poll()` is called from two places — the `setInterval` scheduler and the HTTP trigger handler — and neither had any protection against them running simultaneously. The fix is a module-level `pollInFlight` flag: whichever caller finds the flag set skips its run and logs a line. Eight lines of code, closes the whole surface.
+
+The tested chain: Notion change event → n8n webhook → Cloudflare Tunnel → `POST /trigger-poll` → immediate poll → `kanban.md` rebuilt. Round-trip is a few seconds. Both directions are now effectively instant.
+
+---
+
 ## The code
 
 The daemon is open-source: [github.com/waldov86/notion-obsidian-sync](https://github.com/waldov86/notion-obsidian-sync)
 
-Node.js, ~1,000 lines across 8 files, zero cloud dependencies. Runs as a launchd agent on macOS or a systemd service on Linux. The README covers setup, configuration, and the Notion database schema you'll need.
+Node.js, ~1,100 lines across 10 files, zero cloud dependencies. Runs as a launchd agent on macOS or a systemd service on Linux. The README covers setup, configuration, and the Notion database schema you'll need.
